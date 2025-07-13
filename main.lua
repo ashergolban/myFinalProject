@@ -7,26 +7,45 @@ function love.load()
     require "entity"
     require "player"
 
+    -- Library for animating the player movement
     anim8 = require "libraries/anim8"
-    love.graphics.setDefaultFilter("nearest", "nearest")
+    love.graphics.setDefaultFilter("nearest", "nearest") -- Remove all bluriness when a transformation is made
 
+    -- Library to render the map made in tiled
     sti = require "libraries/sti"
     map = sti("maps/map.lua")
 
-    player = Player(240, 240)
+    -- Library for a camera
+    gamera = require "libraries/gamera"
+    mapWidth = map.width * map.tilewidth
+    mapHeight = map.height * map.tileheight
+    cam = gamera.new(0, 0, mapWidth, mapHeight) -- Sets the boundaries of the camera
+    cam:setScale(2.7) -- Scales the camera to be more zoomed in
+
+    player = Player(108, 53) -- Renders the player at that position
+
+    print("Player:", player.frameWidth, player.frameHeight)
 end
 
 function love.update(dt)
     player:update(dt)
+
+    -- Sets the position of the camera on the players centre
+    cam:setPosition(player.x + player.frameWidth / 2, player.y + player.frameHeight / 2)
 end
 
 function love.draw()
-    for _, layer in ipairs(map.layers) do
-        if layer.type == "tilelayer" and layer.visible then
-            map:drawLayer(layer)
+    cam:draw(function(l, t, w, h)
+        -- Draw the map layer by layer only doing tilelayers
+        for _, layer in ipairs(map.layers) do
+            if layer.type == "tilelayer" and layer.visible then
+                map:drawLayer(layer)
+            end
         end
-    end
-    player:draw()
+        
+        -- Draw the player
+        player:draw()
+    end)
 end
 
 function love.errorhandler(msg)

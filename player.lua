@@ -2,17 +2,17 @@ Player = Entity:extend()
 
 function Player:new(x, y)
     Player.super.new(self, x, y, "sprites/character.png")
-    self.speed = 100
+    self.speed = 75
     self.frameWidth = self.width / 4
     self.frameHeight = self.height / 4
 
-    self.grid = anim8.newGrid(self.frameWidth, self.frameHeight, self.image:getWidth(), self.image:getHeight())
+    self.grid = anim8.newGrid(self.frameWidth, self.frameHeight, self.width, self.height)
 
     self.animations = {}
-    self.animations.down = anim8.newAnimation(self.grid("1-4", 1), 0.2)
-    self.animations.left = anim8.newAnimation(self.grid("1-4", 4), 0.2)
-    self.animations.right = anim8.newAnimation(self.grid("1-4", 2), 0.2)
-    self.animations.up = anim8.newAnimation(self.grid("1-4", 3), 0.2)
+    self.animations.down = anim8.newAnimation(self.grid("1-4", 1), 0.15)
+    self.animations.left = anim8.newAnimation(self.grid("1-4", 4), 0.15)
+    self.animations.right = anim8.newAnimation(self.grid("1-4", 2), 0.15)
+    self.animations.up = anim8.newAnimation(self.grid("1-4", 3), 0.15)
 
     self.anim = self.animations.down
 end
@@ -52,5 +52,5 @@ function Player:update(dt)
 end
 
 function Player:draw()
-    self.anim:draw(self.image, self.x, self.y, nil, 1.5)
+    self.anim:draw(self.image, self.x, self.y, nil, 1)
 end
