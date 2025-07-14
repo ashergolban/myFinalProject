@@ -13,33 +13,35 @@ function Player:new(x, y)
     self.animations.left = anim8.newAnimation(self.grid("1-4", 4), 0.15)
     self.animations.right = anim8.newAnimation(self.grid("1-4", 2), 0.15)
     self.animations.up = anim8.newAnimation(self.grid("1-4", 3), 0.15)
-
     self.anim = self.animations.down
+
+    world:add(self, self.x, self.y, self.frameWidth, self.frameHeight)
 end
 
 function Player:update(dt)
     Player.super.update(self, dt)
 
+    local dx, dy = 0, 0
     local isMoving = false
 
     if love.keyboard.isDown("left") then
-        self.x = self.x - self.speed * dt
+        dx = dx - self.speed * dt
         self.anim = self.animations.left
         isMoving = true
     end
     if love.keyboard.isDown("right") then
-        self.x = self.x + self.speed * dt
+        dx = dx + self.speed * dt
         self.anim = self.animations.right
         isMoving = true
     end
 
     if love.keyboard.isDown("up") then
-        self.y = self.y - self.speed * dt
+        dy = dy - self.speed * dt
         self.anim = self.animations.up
         isMoving = true
     end
     if love.keyboard.isDown("down") then
-        self.y = self.y + self.speed * dt
+        dy = dy + self.speed * dt
         self.anim = self.animations.down
         isMoving = true
     end
@@ -49,6 +51,13 @@ function Player:update(dt)
     end
 
     self.anim:update(dt)
+
+    local goalX = self.x + dx
+    local goalY = self.y + dy
+
+    local actualX, actualY, cols, len = world:move(self, goalX, goalY)
+
+    player.x, player.y = actualX, actualY
 end
 
 function Player:draw()

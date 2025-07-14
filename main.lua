@@ -11,9 +11,14 @@ function love.load()
     anim8 = require "libraries/anim8"
     love.graphics.setDefaultFilter("nearest", "nearest") -- Remove all bluriness when a transformation is made
 
+    -- Library for basic phyics and collision detection
+    bump = require "libraries/bump"
+
     -- Library to render the map made in tiled
     sti = require "libraries/sti"
-    map = sti("maps/map.lua")
+    map = sti("maps/map1.lua", { "bump" })
+    world = bump.newWorld()
+    map:bump_init(world)
 
     -- Library for a camera
     gamera = require "libraries/gamera"
@@ -22,9 +27,7 @@ function love.load()
     cam = gamera.new(0, 0, mapWidth, mapHeight) -- Sets the boundaries of the camera
     cam:setScale(2.7) -- Scales the camera to be more zoomed in
 
-    player = Player(108, 53) -- Renders the player at that position
-
-    print("Player:", player.frameWidth, player.frameHeight)
+    player = Player(113, 100) -- Renders the player at that position
 end
 
 function love.update(dt)
@@ -42,7 +45,7 @@ function love.draw()
                 map:drawLayer(layer)
             end
         end
-        
+
         -- Draw the player
         player:draw()
     end)
