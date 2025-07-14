@@ -16,10 +16,10 @@ function Player:new(x, y)
     self.anim = self.animations.down
 
     self.collisionBox = {
-        xOffset = 0,
+        xOffset = 2,
         yOffset = self.frameHeight / 2,
-        width = self.frameWidth,
-        height = self.frameHeight / 2
+        width = self.frameWidth - 2,
+        height = (self.frameHeight / 2) - 1
     }
     world:add(self, self.x + self.collisionBox.xOffset, 
     self.y + self.collisionBox.yOffset, 

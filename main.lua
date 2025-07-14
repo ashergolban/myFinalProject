@@ -16,7 +16,7 @@ function love.load()
 
     -- Library to render the map made in tiled
     sti = require "libraries/sti"
-    map = sti("maps/map1.lua", { "bump" })
+    map = sti("maps/map.lua", { "bump" })
     world = bump.newWorld()
     map:bump_init(world)
 
