@@ -15,7 +15,16 @@ function Player:new(x, y)
     self.animations.up = anim8.newAnimation(self.grid("1-4", 3), 0.15)
     self.anim = self.animations.down
 
-    world:add(self, self.x, self.y, self.frameWidth, self.frameHeight)
+    self.collisionBox = {
+        xOffset = 0,
+        yOffset = self.frameHeight / 2,
+        width = self.frameWidth,
+        height = self.frameHeight / 2
+    }
+    world:add(self, self.x + self.collisionBox.xOffset, 
+    self.y + self.collisionBox.yOffset, 
+    self.collisionBox.width, 
+    self.collisionBox.height)
 end
 
 function Player:update(dt)
@@ -55,11 +64,15 @@ function Player:update(dt)
     local goalX = self.x + dx
     local goalY = self.y + dy
 
-    local actualX, actualY, cols, len = world:move(self, goalX, goalY)
+    local actualX, actualY, cols, len = world:move(self,
+        goalX + self.collisionBox.xOffset,
+        goalY + self.collisionBox.yOffset
+    )
 
-    player.x, player.y = actualX, actualY
+    player.x = actualX - self.collisionBox.xOffset
+    player.y = actualY - self.collisionBox.yOffset
 end
 
 function Player:draw()
-    self.anim:draw(self.image, self.x, self.y, nil, 1)
+    self.anim:draw(self.image, self.x, self.y)
 end
