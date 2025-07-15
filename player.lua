@@ -1,6 +1,6 @@
 Player = Entity:extend()
 
-function Player:new(x, y)
+function Player:new(x, y, world)
     Player.super.new(self, x, y, "sprites/character.png")
     self.speed = 75
     self.frameWidth = self.width / 4
@@ -18,10 +18,13 @@ function Player:new(x, y)
     self.collisionBox = {
         xOffset = 2,
         yOffset = self.frameHeight / 2,
-        width = self.frameWidth - 2,
+        width = self.frameWidth - 5,
         height = (self.frameHeight / 2) - 1
     }
-    world:add(self, self.x + self.collisionBox.xOffset, 
+    
+    self.world = world
+
+    self.world:add(self, self.x + self.collisionBox.xOffset, 
     self.y + self.collisionBox.yOffset, 
     self.collisionBox.width, 
     self.collisionBox.height)
@@ -64,13 +67,13 @@ function Player:update(dt)
     local goalX = self.x + dx
     local goalY = self.y + dy
 
-    local actualX, actualY, cols, len = world:move(self,
+    local actualX, actualY, cols, len = self.world:move(self,
         goalX + self.collisionBox.xOffset,
         goalY + self.collisionBox.yOffset
     )
 
-    player.x = actualX - self.collisionBox.xOffset
-    player.y = actualY - self.collisionBox.yOffset
+    self.x = actualX - self.collisionBox.xOffset
+    self.y = actualY - self.collisionBox.yOffset
 end
 
 function Player:draw()
