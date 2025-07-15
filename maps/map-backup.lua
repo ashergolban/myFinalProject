@@ -513,7 +513,7 @@ return {
           shape = "rectangle",
           x = 32,
           y = 205,
-          width = 96,
+          width = 95.9899,
           height = 19,
           rotation = 0,
           visible = true,

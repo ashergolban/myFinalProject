@@ -14,7 +14,7 @@ function love.load()
     -- Library for basic phyics and collision detection
     bump = require "libraries/bump"
 
-    -- Library to render the map made in tiled
+    -- Library to render the map made in tiled and initialise the collisions with bump plugin
     sti = require "libraries/sti"
     map = sti("maps/map.lua", { "bump" })
     world = bump.newWorld()
@@ -25,7 +25,7 @@ function love.load()
     mapWidth = map.width * map.tilewidth
     mapHeight = map.height * map.tileheight
     cam = gamera.new(0, 0, mapWidth, mapHeight) -- Sets the boundaries of the camera
-    cam:setScale(2.7) -- Scales the camera to be more zoomed in
+    cam:setScale(3) -- Scales the camera to be more zoomed in
 
     player = Player(113, 100) -- Renders the player at that position
 end
@@ -33,8 +33,12 @@ end
 function love.update(dt)
     player:update(dt)
 
+    map:update(dt)
+
     -- Sets the position of the camera on the players centre
-    cam:setPosition(player.x + player.frameWidth / 2, player.y + player.frameHeight / 2)
+    local camX = player.x + player.frameWidth / 2
+    local camY = player.y + player.frameHeight / 2
+    cam:setPosition(camX, camY)
 end
 
 function love.draw()
