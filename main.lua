@@ -12,10 +12,11 @@ function love.load()
     require "entity"
     require "player"
     require "mapbase"
+    require "cavernarea"
     require "mainarea"
 
     showDebug = false
-    currentLevel = MainArea()
+    currentLevel = MainArea(113, 100)
 end
 
 function love.update(dt)

@@ -67,13 +67,30 @@ function Player:update(dt)
     local goalX = self.x + dx
     local goalY = self.y + dy
 
+    local function playerCollisionFilter(item, other)
+        if other.isPortal then
+            return "cross"
+        end
+        return "slide"
+    end
+
     local actualX, actualY, cols, len = self.world:move(self,
         goalX + self.collisionBox.xOffset,
-        goalY + self.collisionBox.yOffset
+        goalY + self.collisionBox.yOffset,
+        playerCollisionFilter
     )
 
     self.x = actualX - self.collisionBox.xOffset
     self.y = actualY - self.collisionBox.yOffset
+
+    for i = 1,len do
+        local col = cols[i].other
+        if col.isPortal then
+            if self.onPortal then
+                self:onPortal(col)
+            end
+        end
+    end
 end
 
 function Player:draw()

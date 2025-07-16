@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="145">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="147">
  <editorsettings>
-  <export target="map-animated.lua" format="lua"/>
+  <export target="MainMap.lua" format="lua"/>
  </editorsettings>
  <tileset firstgid="1" name="test-tiles" tilewidth="16" tileheight="16" tilecount="1440" columns="40">
   <image source="gfx/Overworld.png" width="640" height="576"/>
@@ -301,6 +301,15 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="12" name="Portals">
+  <object id="145" x="432" y="363" width="16" height="23">
+   <properties>
+    <property name="spawn_x" type="int" value="80"/>
+    <property name="spawn_y" type="int" value="383"/>
+    <property name="target_map" value="cavern"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="10" name="Collisions">
   <properties>
    <property name="collidable" type="bool" value="true"/>

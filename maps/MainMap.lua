@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 13,
-  nextobjectid = 146,
+  nextobjectid = 147,
   properties = {},
   tilesets = {
     {
@@ -567,7 +567,7 @@ return {
       type = "objectgroup",
       draworder = "topdown",
       id = 12,
-      name = "Portal",
+      name = "Portals",
       class = "",
       visible = true,
       opacity = 1,
@@ -591,7 +591,7 @@ return {
           properties = {
             ["spawn_x"] = 80,
             ["spawn_y"] = 383,
-            ["target_map"] = "CaveMap"
+            ["target_map"] = "cavern"
           }
         }
       }
