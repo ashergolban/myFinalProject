@@ -1,4 +1,5 @@
 function loadLibraries()
+    -- This is to load all libraries necessary for this project
     Object = require "libraries/classic"
     anim8 = require "libraries/anim8"
     bump = require "libraries/bump"
