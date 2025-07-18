@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 6,
-  nextobjectid = 17,
+  nextobjectid = 18,
   properties = {},
   tilesets = {
     {
@@ -216,8 +216,8 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["spawn_x"] = 432,
-            ["spawn_y"] = 376,
+            ["spawn_x"] = 113,
+            ["spawn_y"] = 100,
             ["target_map"] = "death"
           }
         },
