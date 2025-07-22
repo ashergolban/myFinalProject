@@ -21,6 +21,6 @@ function CavernArea:switchMap(portal)
     elseif portal.target_map == "death" then
         currentLevel = MainArea(portal.spawn_x, portal.spawn_y)
     elseif portal.target_map == "puzzle1" then
-        -- Work in progress for the first puzzle
+        currentLevel = CavernPuzzle1(portal.spawn_x, portal.spawn_y)
     end
 end

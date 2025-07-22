@@ -12,11 +12,13 @@ function love.load()
     require "entity"
     require "player"
     require "mapbase"
+    require "cavernpuzzle1"
     require "cavernarea"
     require "mainarea"
 
     showDebug = false
-    currentLevel = MainArea(113, 100)
+    -- currentLevel = MainArea(113, 100)
+    currentLevel = CavernPuzzle1(10, 216)
 end
 
 function love.update(dt)

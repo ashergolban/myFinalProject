@@ -94,8 +94,8 @@
   </object>
   <object id="14" x="471" y="240" width="9" height="48">
    <properties>
-    <property name="spawn_x" type="int" value="0"/>
-    <property name="spawn_y" type="int" value="0"/>
+    <property name="spawn_x" type="int" value="10"/>
+    <property name="spawn_y" type="int" value="216"/>
     <property name="target_map" value="puzzle1"/>
    </properties>
   </object>

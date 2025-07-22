@@ -233,8 +233,8 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["spawn_x"] = 0,
-            ["spawn_y"] = 0,
+            ["spawn_x"] = 10,
+            ["spawn_y"] = 216,
             ["target_map"] = "puzzle1"
           }
         }
