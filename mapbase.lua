@@ -13,7 +13,8 @@ function MapBase:new(mapFile)
     self.width = self.map.width * self.map.tilewidth
     self.height = self.map.height * self.map.tileheight
     self.cam = gamera.new(0, 0, self.width, self.height)
-    self.cam:setScale(4) -- Set the camera with a 4x zoom
+    self.scale = 4 -- Scale factor for zoom
+    self.cam:setScale(self.scale) -- Set the camera with a 4x zoom
 end
 
 function MapBase:update(dt)

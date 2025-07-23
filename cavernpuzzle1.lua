@@ -15,6 +15,24 @@ function CavernPuzzle1:new(x, y)
     self:minesweeperFunctionality()
 end
 
+function CavernPuzzle1:update(dt)
+    CavernPuzzle1.super.update(self, dt)
+
+    if self.minesweeperZone then
+        local zone = self.minesweeperZone
+        local mouseX, mouseY = self.cam:toWorld(love.mouse.getPosition())
+
+        local tileWidth = self.map.tilewidth
+        local tileHeight = self.map.tileheight
+
+        selectedX = math.floor((mouseX - zone.x) / tileWidth) + 1
+        selectedY = math.floor((mouseY - zone.y) / tileHeight) + 1
+
+        selectedX = math.max(1, math.min(self.cols, selectedX))
+        selectedY = math.max(1, math.min(self.rows, selectedY))
+    end
+end
+
 function CavernPuzzle1:drawBefore()
     -- Draw only all visible tile layers in the correct order
     for _, layer in ipairs(self.map.layers) do
@@ -25,21 +43,35 @@ function CavernPuzzle1:drawBefore()
 
     if self.minesweeperZone then
         local zone = self.minesweeperZone
-        local tileW = self.map.tilewidth
-        local tileH = self.map.tileheight
-
-        local cols = math.floor(zone.width / tileW)
-        local rows = math.floor(zone.height / tileH)
+        local tileWidth = self.map.tilewidth
+        local tileHeight = self.map.tileheight
 
         local startX = zone.x
-        local starty = zone.y
+        local startY = zone.y
 
-        for row = 0, rows - 1 do
-            for col = 0, cols - 1 do
-                love.graphics.draw(self.image, self.tiles["covered"], startX + col * tileW, starty + row * tileH)
+        for row = 1, self.rows do
+            for col = 1, self.cols do
+                local tile = "covered"
+
+                if selectedX == col and selectedY == row then
+                    tile = "covered_highlighted"
+                end
+
+                local drawX = startX + (col - 1) * tileWidth
+                local drawY = startY + (row - 1) * tileHeight
+
+                love.graphics.draw(self.image, self.tiles[tile], drawX, drawY)
             end
         end
+        -- Debugging purposes
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.rectangle("line", zone.x, zone.y, zone.width, zone.height)
+        love.graphics.setColor(1, 1, 1)
     end
+    -- Debugging purposes 
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.print('selected x: '..selectedX..' selected y: '..selectedY)
+    love.graphics.setColor(1, 1, 1)
 end
 
 function CavernPuzzle1:minesweeperFunctionality()
@@ -54,29 +86,41 @@ function CavernPuzzle1:minesweeperFunctionality()
 
     self.tiles = {}
 
-    local imageFrameWidth = 16
-    local imageFrameHeight = 16
+    self.imageFrameWidth = imageWidth / 7
+    self.imageFrameHeight = imageHeight / 2
 
     for row = 1, #tileNames do
         for col = 1, #tileNames[row] do
             local key = tileNames[row][col]
-            self.tiles[key] = love.graphics.newQuad((col - 1) * imageFrameWidth, (row - 1) * imageFrameHeight, imageFrameWidth, imageFrameHeight, imageWidth, imageHeight)
+            self.tiles[key] = love.graphics.newQuad(
+                (col - 1) * self.imageFrameWidth,
+                (row - 1) * self.imageFrameHeight,
+                self.imageFrameWidth,
+                self.imageFrameHeight,
+                imageWidth,
+                imageHeight
+            )
         end
     end
 
-    for _, layer in ipairs(self.map.layers) do
-        if layer.type == "objectgroup" then
-            for _, object in ipairs(layer.objects) do
-                if object.name == "minesweeper_zone" then
-                    self.minesweeperZone = {
-                    x = object.x,
-                    y = object.y,
-                    width = object.width,
-                    height = object.height
-                    }
-                    break
-                end
-            end
+    -- First look for a layer name "Portals" of type "objectgroup" in the map
+    local layer = self.map.layers["MinesweeperArea"]
+    if not layer or layer.type ~= "objectgroup" then
+        return -- No portal layer was found, dont load anything
+    end
+
+    for _, object in ipairs(layer.objects) do
+        if object.name == "minesweeper_zone" then
+            self.minesweeperZone = {
+            x = object.x,
+            y = object.y,
+            width = object.width,
+            height = object.height
+            }
+
+            self.cols = math.floor(self.minesweeperZone.width / self.map.tilewidth)
+            self.rows = math.floor(self.minesweeperZone.height / self.map.tileheight)
+            break
         end
     end
 end
