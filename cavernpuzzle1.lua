@@ -103,10 +103,14 @@ function CavernPuzzle1:minesweeperFunctionality()
         end
     end
 
-    -- First look for a layer name "Portals" of type "objectgroup" in the map
+    self:loadMinesweeperArea()
+end
+
+function CavernPuzzle1:loadMinesweeperArea()
+     -- First look for a layer name "MinesweeperArea" of type "objectgroup" in the map
     local layer = self.map.layers["MinesweeperArea"]
     if not layer or layer.type ~= "objectgroup" then
-        return -- No portal layer was found, dont load anything
+        return -- No minesweeperarea layer was found, dont load anything
     end
 
     for _, object in ipairs(layer.objects) do
