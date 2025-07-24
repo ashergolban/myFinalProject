@@ -49,20 +49,25 @@ function CavernPuzzle1:drawBefore()
         local startX = zone.x
         local startY = zone.y
 
-        for row = 1, self.rows do
-            for col = 1, self.cols do
+        for _, cell in ipairs(self.minesweeperTiles) do
+            if not cell.uncovered then
                 local tile = "covered"
-
-                if selectedX == col and selectedY == row then
+                if selectedX == cell.col and selectedY == cell.row then
                     tile = "covered_highlighted"
                 end
 
-                local drawX = startX + (col - 1) * tileWidth
-                local drawY = startY + (row - 1) * tileHeight
+                love.graphics.draw(self.image, self.tiles[tile], cell.x, cell.y)
 
-                love.graphics.draw(self.image, self.tiles[tile], drawX, drawY)
+                if cell.flagged then
+                    love.graphics.draw(self.image, self.tiles["flag"], cell.x, cell.y)
+                elseif cell.questioned then
+                    love.graphics.draw(self.image, self.tiles["question"], cell.x, cell.y)
+                end
+            else
+                love.graphics.draw(self.image, self.tiles["uncovered"], cell.x, cell.y)
             end
         end
+
         -- Debugging purposes
         love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle("line", zone.x, zone.y, zone.width, zone.height)
@@ -107,6 +112,9 @@ function CavernPuzzle1:minesweeperFunctionality()
 end
 
 function CavernPuzzle1:loadMinesweeperArea()
+
+    self.minesweeperTiles = {}
+
      -- First look for a layer name "MinesweeperArea" of type "objectgroup" in the map
     local layer = self.map.layers["MinesweeperArea"]
     if not layer or layer.type ~= "objectgroup" then
@@ -125,6 +133,49 @@ function CavernPuzzle1:loadMinesweeperArea()
             self.cols = math.floor(self.minesweeperZone.width / self.map.tilewidth)
             self.rows = math.floor(self.minesweeperZone.height / self.map.tileheight)
             break
+        end
+    end
+
+    if not self.minesweeperZone then
+        return
+    end
+
+    for _, object in ipairs(layer.objects) do
+        if object.name == "minesweeper_tile" then
+            local tile = {
+                x = object.x,
+                y = object.y,
+                width = object.width,
+                height = object.height,
+                col = math.floor((object.x - self.minesweeperZone.x) / self.map.tilewidth) + 1,
+                row = math.floor((object.y - self.minesweeperZone.y) / self.map.tileheight) + 1,
+                uncovered = false,
+                flagged = false,
+                questioned = false,
+                isMinesweeperTile = true
+            }
+
+            self.world:add(tile, tile.x, tile.y, tile.width, tile.height)
+
+            table.insert(self.minesweeperTiles, tile)
+        end
+    end
+end
+
+function CavernPuzzle1:mousePressed(x, y, button)
+    if button == 2 and selectedX and selectedY then
+        for _, tile in ipairs(self.minesweeperTiles) do
+            if tile.col == selectedX and tile.row == selectedY and not tile.uncovered then
+                if not tile.flagged and not tile.questioned then
+                    tile.flagged = true
+                elseif  tile.flagged then
+                    tile.flagged = false
+                    tile.questioned = true
+                elseif tile.questioned  then
+                    tile.questioned = false
+                end
+                break
+            end
         end
     end
 end

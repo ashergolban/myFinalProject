@@ -35,6 +35,12 @@ function love.keypressed(key)
     end
 end
 
+function love.mousepressed(x, y, button)
+    if currentLevel and currentLevel.mousePressed then
+        currentLevel:mousePressed(x, y, button)
+    end
+end
+
 function love.errorhandler(msg)
     if lldebugger then
         error(msg, 2)

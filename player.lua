@@ -80,7 +80,7 @@ function Player:update(dt)
 
     -- Defin how collisions should be resolved, either pass through or solid objects
     local function playerCollisionFilter(item, other)
-        if other.isPortal then
+        if other.isPortal or other.isMinesweeperTile then
             return "cross"
         end
         return "slide"
@@ -106,6 +106,10 @@ function Player:update(dt)
             if self.onPortal then
                 self:onPortal(col)
             end
+        end
+
+        if col.isMinesweeperTile and not col.uncovered and not col.flagged then
+            col.uncovered = true
         end
     end
 end
