@@ -72,6 +72,24 @@ function CavernPuzzle1:drawBefore()
                     drawTile("skull", cell)
                 else
                     drawTile("uncovered", cell)
+                    if cell.nearbyMineCount and cell.nearbyMineCount > 0 then
+                        local numberNames = {
+                            [1] = "one",
+                            [2] = "two",
+                            [3] = "three",
+                            [4] = "four",
+                            [5] = "five",
+                            [6] = "six",
+                            [7] = "seven",
+                            [8] = "eight"
+                        }
+
+                        local numName = numberNames[cell.nearbyMineCount]
+
+                        if numName then
+                            drawTile(numName, cell)
+                        end
+                    end
                 end
             end
         end
@@ -177,10 +195,38 @@ function CavernPuzzle1:loadMinesweeperArea()
             return a.row < b.row
         end
     end)
-    
+
     self.minesweeperTiles[1].hasMine = true
     self.minesweeperTiles[2].hasMine = true
     self.minesweeperTiles[3].hasMine = true
+
+    self.tileGrid = {}
+
+    for _, tile in ipairs(self.minesweeperTiles) do
+        self.tileGrid[tile.row] = self.tileGrid[tile.row] or {}
+        self.tileGrid[tile.row][tile.col] = tile
+    end
+
+    for _, tile in ipairs(self.minesweeperTiles) do
+        local surroundingMineCount = 0
+
+        for dy = -1, 1 do
+            for dx = -1, 1 do
+                if not (dx == 0 and dy == 0) then
+                    local adjacentRow = tile.row + dy
+                    local adjacentCol = tile.col + dx
+                    if self.tileGrid[adjacentRow] and self.tileGrid[adjacentRow][adjacentCol] then
+                        local adjacentTile = self.tileGrid[adjacentRow][adjacentCol]
+                        if adjacentTile.hasMine then
+                            surroundingMineCount = surroundingMineCount + 1
+                        end
+                    end
+                end
+            end
+        end
+
+        tile.nearbyMineCount = surroundingMineCount
+    end
 end
 
 function CavernPuzzle1:mousePressed(x, y, button)
