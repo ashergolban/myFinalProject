@@ -50,21 +50,29 @@ function CavernPuzzle1:drawBefore()
         local startY = zone.y
 
         for _, cell in ipairs(self.minesweeperTiles) do
+            local function drawTile(tile, cell)
+                love.graphics.draw(self.image, self.tiles[tile], cell.x, cell.y)
+            end
+
             if not cell.uncovered then
                 local tile = "covered"
                 if selectedX == cell.col and selectedY == cell.row then
                     tile = "covered_highlighted"
                 end
 
-                love.graphics.draw(self.image, self.tiles[tile], cell.x, cell.y)
+                drawTile(tile, cell)
 
                 if cell.flagged then
-                    love.graphics.draw(self.image, self.tiles["flag"], cell.x, cell.y)
+                    drawTile("flag", cell)
                 elseif cell.questioned then
-                    love.graphics.draw(self.image, self.tiles["question"], cell.x, cell.y)
+                    drawTile("question", cell)
                 end
             else
-                love.graphics.draw(self.image, self.tiles["uncovered"], cell.x, cell.y)
+                if cell.hasMine then
+                    drawTile("skull", cell)
+                else
+                    drawTile("uncovered", cell)
+                end
             end
         end
 
@@ -152,7 +160,8 @@ function CavernPuzzle1:loadMinesweeperArea()
                 uncovered = false,
                 flagged = false,
                 questioned = false,
-                isMinesweeperTile = true
+                isMinesweeperTile = true,
+                hasMine = false
             }
 
             self.world:add(tile, tile.x, tile.y, tile.width, tile.height)
@@ -160,6 +169,18 @@ function CavernPuzzle1:loadMinesweeperArea()
             table.insert(self.minesweeperTiles, tile)
         end
     end
+
+    table.sort(self.minesweeperTiles, function (a, b)
+        if a.row == b.row then
+            return a.col < b.col
+        else
+            return a.row < b.row
+        end
+    end)
+    
+    self.minesweeperTiles[1].hasMine = true
+    self.minesweeperTiles[2].hasMine = true
+    self.minesweeperTiles[3].hasMine = true
 end
 
 function CavernPuzzle1:mousePressed(x, y, button)
