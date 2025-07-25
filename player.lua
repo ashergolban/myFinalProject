@@ -110,7 +110,7 @@ function Player:update(dt)
 
         if col.isMinesweeperTile and not col.uncovered and not col.flagged then
             col.uncovered = true
-            if col.hasMine then
+            if col.hasSkull then
                 print("Dead")
             end
         end

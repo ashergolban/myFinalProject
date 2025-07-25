@@ -68,11 +68,11 @@ function CavernPuzzle1:drawBefore()
                     drawTile("question", cell)
                 end
             else
-                if cell.hasMine then
+                if cell.hasSkull then
                     drawTile("skull", cell)
                 else
                     drawTile("uncovered", cell)
-                    if cell.nearbyMineCount and cell.nearbyMineCount > 0 then
+                    if cell.nearbySkullCount and cell.nearbySkullCount > 0 then
                         local numberNames = {
                             [1] = "one",
                             [2] = "two",
@@ -84,7 +84,7 @@ function CavernPuzzle1:drawBefore()
                             [8] = "eight"
                         }
 
-                        local numName = numberNames[cell.nearbyMineCount]
+                        local numName = numberNames[cell.nearbySkullCount]
 
                         if numName then
                             drawTile(numName, cell)
@@ -179,7 +179,7 @@ function CavernPuzzle1:loadMinesweeperArea()
                 flagged = false,
                 questioned = false,
                 isMinesweeperTile = true,
-                hasMine = false
+                hasSkull = false
             }
 
             self.world:add(tile, tile.x, tile.y, tile.width, tile.height)
@@ -196,9 +196,18 @@ function CavernPuzzle1:loadMinesweeperArea()
         end
     end)
 
-    self.minesweeperTiles[1].hasMine = true
-    self.minesweeperTiles[2].hasMine = true
-    self.minesweeperTiles[3].hasMine = true
+    local skullCount = 10
+    local placedSkulls = 0
+    local usedSkullPositions = {}
+
+    while placedSkulls < skullCount do
+        local index = love.math.random(#self.minesweeperTiles)
+        if not usedSkullPositions[index] then
+            usedSkullPositions[index] = true
+            self.minesweeperTiles[index].hasSkull = true
+            placedSkulls = placedSkulls + 1
+        end
+    end
 
     self.tileGrid = {}
 
@@ -208,7 +217,7 @@ function CavernPuzzle1:loadMinesweeperArea()
     end
 
     for _, tile in ipairs(self.minesweeperTiles) do
-        local surroundingMineCount = 0
+        local surroundingskullCount = 0
 
         for dy = -1, 1 do
             for dx = -1, 1 do
@@ -217,15 +226,15 @@ function CavernPuzzle1:loadMinesweeperArea()
                     local adjacentCol = tile.col + dx
                     if self.tileGrid[adjacentRow] and self.tileGrid[adjacentRow][adjacentCol] then
                         local adjacentTile = self.tileGrid[adjacentRow][adjacentCol]
-                        if adjacentTile.hasMine then
-                            surroundingMineCount = surroundingMineCount + 1
+                        if adjacentTile.hasSkull then
+                            surroundingskullCount = surroundingskullCount + 1
                         end
                     end
                 end
             end
         end
 
-        tile.nearbyMineCount = surroundingMineCount
+        tile.nearbySkullCount = surroundingskullCount
     end
 end
 
