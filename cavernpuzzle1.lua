@@ -8,11 +8,15 @@ function CavernPuzzle1:new(x, y)
     
     -- Define a callback function triggered when the player touches a portal 
     -- this will switch the map
-    self.player.onPortal = function(_, portal)
+    self.player.onPortal = function (_, portal)
         self:switchMap(portal)
     end
 
     self:minesweeperFunctionality()
+
+    self.player.onRevealTile = function (_, tile)
+        self:revealTile(tile)
+    end
 end
 
 function CavernPuzzle1:update(dt)
@@ -219,23 +223,60 @@ function CavernPuzzle1:loadMinesweeperArea()
     for _, tile in ipairs(self.minesweeperTiles) do
         local surroundingskullCount = 0
 
-        for dy = -1, 1 do
-            for dx = -1, 1 do
-                if not (dx == 0 and dy == 0) then
-                    local adjacentRow = tile.row + dy
-                    local adjacentCol = tile.col + dx
-                    if self.tileGrid[adjacentRow] and self.tileGrid[adjacentRow][adjacentCol] then
-                        local adjacentTile = self.tileGrid[adjacentRow][adjacentCol]
-                        if adjacentTile.hasSkull then
-                            surroundingskullCount = surroundingskullCount + 1
-                        end
+        for _, adjacentTile in ipairs(self:getAdjacentTiles(tile)) do
+            if adjacentTile.hasSkull then
+                surroundingskullCount = surroundingskullCount + 1
+            end
+        end
+        tile.nearbySkullCount = surroundingskullCount
+    end
+end
+
+function CavernPuzzle1:revealTile(tile)
+    if tile.uncovered or tile.flagged then
+        return
+    end
+
+    if tile.hasSkull then
+        print("Dead")
+        -- Need to work on the gameover and death logic
+        tile.uncovered = true
+        return
+    end
+
+    local stack = { tile }
+
+    while #stack > 0 do
+        local currentTile = table.remove(stack)
+        if not currentTile.uncovered then
+            currentTile.uncovered = true
+
+            if currentTile.nearbySkullCount == 0 and not currentTile.questioned then
+                for _, adjacentTile in ipairs(self:getAdjacentTiles(currentTile)) do
+                    if adjacentTile and not adjacentTile.uncovered and not adjacentTile.flagged and not adjacentTile.hasSkull then
+                        table.insert(stack, adjacentTile)
                     end
                 end
             end
         end
-
-        tile.nearbySkullCount = surroundingskullCount
     end
+end
+
+function CavernPuzzle1:getAdjacentTiles(tile)
+    local adjacentTiles = {}
+
+    for dy = -1, 1 do
+        for dx = -1, 1 do
+            if not (dx == 0 and dy == 0) then
+                local adjacentRow = tile.row + dy
+                local adjacentCol = tile.col + dx
+                if self.tileGrid[adjacentRow] and self.tileGrid[adjacentRow][adjacentCol] then
+                    table.insert(adjacentTiles, self.tileGrid[adjacentRow][adjacentCol])
+                end
+            end
+        end
+    end
+    return adjacentTiles
 end
 
 function CavernPuzzle1:mousePressed(x, y, button)

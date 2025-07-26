@@ -109,9 +109,8 @@ function Player:update(dt)
         end
 
         if col.isMinesweeperTile and not col.uncovered and not col.flagged then
-            col.uncovered = true
-            if col.hasSkull then
-                print("Dead")
+            if self.onRevealTile then
+                self:onRevealTile(col)
             end
         end
     end
