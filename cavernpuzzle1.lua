@@ -19,6 +19,7 @@ function CavernPuzzle1:new(x, y)
     end
 
     self.firstTileRevealed = false
+    self.won = false
 end
 
 function CavernPuzzle1:update(dt)
@@ -204,6 +205,26 @@ function CavernPuzzle1:loadMinesweeperArea()
     end)
 
     self:buildTileGrid()
+
+    local boulderLayer = self.map.layers["Boulders"]
+    if not boulderLayer or layer.type ~= "objectgroup"  then
+        return
+    end
+
+    self.exitBoulders = {}
+
+    for _, object in ipairs(boulderLayer.objects) do
+        local boulder = {
+            x = object.x,
+            y = object.y,
+            width = object.width,
+            height = object.height
+        }
+
+        self.world:add(boulder, boulder.x, boulder.y, boulder.width, boulder.height)
+
+        table.insert(self.exitBoulders, boulder)
+    end
 end
 
 function CavernPuzzle1:buildTileGrid()
@@ -216,7 +237,7 @@ function CavernPuzzle1:buildTileGrid()
 end
 
 function CavernPuzzle1:placeSkulls(startingTile)
-    local skullCount = 40
+    local skullCount = 10
     local placedSkulls = 0
     local usedSkullPositions = {}
 
@@ -276,6 +297,8 @@ function CavernPuzzle1:revealTile(tile)
             end
         end
     end
+
+    self:checkWinCondition()
 end
 
 function CavernPuzzle1:getAdjacentTiles(tile)
@@ -295,6 +318,40 @@ function CavernPuzzle1:getAdjacentTiles(tile)
     return adjacentTiles
 end
 
+function CavernPuzzle1:checkWinCondition()
+    for _, tile in ipairs(self.minesweeperTiles) do
+        if not tile.hasSkull and not tile.uncovered then
+            return
+        end
+        if tile.hasSkull and not tile.flagged then
+            return
+        end
+        if not tile.hasSkull and tile.flagged then
+            return
+        end
+    end
+
+    if not self.won then
+        print("You win!")
+        self:clearExitBoulders()
+    end
+end
+
+function CavernPuzzle1:clearExitBoulders()
+    self.won = true
+
+    for _, boulder in ipairs(self.exitBoulders) do
+        if self.world:hasItem(boulder) then
+            self.world:remove(boulder)
+        end
+    end
+
+    local tileLayer = self.map.layers["BoulderDecorations"]
+    if tileLayer then
+        tileLayer.visible = false
+    end
+end
+
 function CavernPuzzle1:mousePressed(x, y, button)
     if button == 2 and selectedX and selectedY then
         for _, tile in ipairs(self.minesweeperTiles) do
@@ -311,11 +368,19 @@ function CavernPuzzle1:mousePressed(x, y, button)
             end
         end
     end
+
+    self:checkWinCondition()
 end
 
 function CavernPuzzle1:switchMap(portal)
     -- Switches the current level with a new instance based of the target map in the portal properties
     -- The player will spawn at the coordinates defined in the portal's properties
+
+    -- If the game isn't won don't switch maps
+    if not self.won then
+        return
+    end
+
     if portal.target_map == "cavern" then
         currentLevel = CavernArea(portal.spawn_x, portal.spawn_y)
     end
