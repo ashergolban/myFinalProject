@@ -17,6 +17,8 @@ function CavernPuzzle1:new(x, y)
     self.player.onRevealTile = function (_, tile)
         self:revealTile(tile)
     end
+
+    self.firstTileRevealed = false
 end
 
 function CavernPuzzle1:update(dt)
@@ -183,7 +185,8 @@ function CavernPuzzle1:loadMinesweeperArea()
                 flagged = false,
                 questioned = false,
                 isMinesweeperTile = true,
-                hasSkull = false
+                hasSkull = false,
+                nearbySkullCount = 0
             }
 
             self.world:add(tile, tile.x, tile.y, tile.width, tile.height)
@@ -200,24 +203,32 @@ function CavernPuzzle1:loadMinesweeperArea()
         end
     end)
 
-    local skullCount = 10
-    local placedSkulls = 0
-    local usedSkullPositions = {}
+    self:buildTileGrid()
+end
 
-    while placedSkulls < skullCount do
-        local index = love.math.random(#self.minesweeperTiles)
-        if not usedSkullPositions[index] then
-            usedSkullPositions[index] = true
-            self.minesweeperTiles[index].hasSkull = true
-            placedSkulls = placedSkulls + 1
-        end
-    end
-
+function CavernPuzzle1:buildTileGrid()
     self.tileGrid = {}
 
     for _, tile in ipairs(self.minesweeperTiles) do
         self.tileGrid[tile.row] = self.tileGrid[tile.row] or {}
         self.tileGrid[tile.row][tile.col] = tile
+    end
+end
+
+function CavernPuzzle1:placeSkulls(startingTile)
+    local skullCount = 40
+    local placedSkulls = 0
+    local usedSkullPositions = {}
+
+    while placedSkulls < skullCount do
+        local index = love.math.random(#self.minesweeperTiles)
+        local currentTile = self.minesweeperTiles[index]
+
+        if not usedSkullPositions[index] and not (currentTile.row == startingTile.row and currentTile.col == startingTile.col) then
+            usedSkullPositions[index] = true
+            currentTile.hasSkull = true
+            placedSkulls = placedSkulls + 1
+        end
     end
 
     for _, tile in ipairs(self.minesweeperTiles) do
@@ -235,6 +246,11 @@ end
 function CavernPuzzle1:revealTile(tile)
     if tile.uncovered or tile.flagged then
         return
+    end
+
+    if not self.firstTileRevealed then
+        self:placeSkulls(tile)
+        self.firstTileRevealed = true
     end
 
     if tile.hasSkull then
