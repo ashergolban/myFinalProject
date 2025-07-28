@@ -20,6 +20,7 @@ function CavernPuzzle1:new(x, y)
 
     self.firstTileRevealed = false
     self.won = false
+    self.lives = 3
 end
 
 function CavernPuzzle1:update(dt)
@@ -265,6 +266,10 @@ function CavernPuzzle1:placeSkulls(startingTile)
 end
 
 function CavernPuzzle1:revealTile(tile)
+    if self.dead then
+        return
+    end
+
     if tile.uncovered or tile.flagged then
         return
     end
@@ -278,7 +283,19 @@ function CavernPuzzle1:revealTile(tile)
         print("Dead")
         -- Need to work on the gameover and death logic
         tile.uncovered = true
-        return
+        self.lives = self.lives - 1
+
+        if self.lives <= 0 then
+            for _, otherTile in ipairs(self.minesweeperTiles) do
+                if otherTile.hasSkull then
+                    otherTile.uncovered = true
+                end
+            end
+
+            self.dead = true
+
+            return
+        end
     end
 
     local stack = { tile }
@@ -320,14 +337,14 @@ end
 
 function CavernPuzzle1:checkWinCondition()
     for _, tile in ipairs(self.minesweeperTiles) do
-        if not tile.hasSkull and not tile.uncovered then
-            return
-        end
-        if tile.hasSkull and not tile.flagged then
-            return
-        end
-        if not tile.hasSkull and tile.flagged then
-            return
+        if tile.hasSkull then
+            if not tile.flagged and not tile.uncovered then
+                return
+            end
+        else
+            if not tile.uncovered or tile.flagged then
+                return
+            end
         end
     end
 
@@ -353,6 +370,10 @@ function CavernPuzzle1:clearExitBoulders()
 end
 
 function CavernPuzzle1:mousePressed(x, y, button)
+    if self.dead then
+        return
+    end
+
     if button == 2 and selectedX and selectedY then
         for _, tile in ipairs(self.minesweeperTiles) do
             if tile.col == selectedX and tile.row == selectedY and not tile.uncovered then
