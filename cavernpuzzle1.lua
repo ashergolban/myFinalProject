@@ -1,6 +1,6 @@
 CavernPuzzle1 = MapBase:extend()
 
-function CavernPuzzle1:new(x, y)
+function CavernPuzzle1:new(x, y, difficulty, roundLives)
     CavernPuzzle1.super.new(self, "maps/CavePuzzle1.lua")
 
     -- Create the player at the given coordinates and register them in the collision world
@@ -20,7 +20,12 @@ function CavernPuzzle1:new(x, y)
 
     self.firstTileRevealed = false
     self.won = false
-    self.lives = 3
+    self.gameDifficulty = difficulty or "easy"
+    self.roundLives = roundLives or 3
+
+    if self.gameDifficulty == "easy" then
+        self.lives = 3
+    end
 end
 
 function CavernPuzzle1:update(dt)
@@ -51,36 +56,31 @@ function CavernPuzzle1:drawBefore()
 
     if self.minesweeperZone then
         local zone = self.minesweeperZone
-        local tileWidth = self.map.tilewidth
-        local tileHeight = self.map.tileheight
 
-        local startX = zone.x
-        local startY = zone.y
-
-        for _, cell in ipairs(self.minesweeperTiles) do
-            local function drawTile(tile, cell)
-                love.graphics.draw(self.image, self.tiles[tile], cell.x, cell.y)
+        for _, tile in ipairs(self.minesweeperTiles) do
+            local function drawTile(tileName, currentTile)
+                love.graphics.draw(self.image, self.tiles[tileName], currentTile.x, currentTile.y)
             end
 
-            if not cell.uncovered then
-                local tile = "covered"
-                if selectedX == cell.col and selectedY == cell.row then
-                    tile = "covered_highlighted"
+            if not tile.uncovered then
+                local tileName = "covered"
+                if selectedX == tile.col and selectedY == tile.row then
+                    tileName = "covered_highlighted"
                 end
 
-                drawTile(tile, cell)
+                drawTile(tileName, tile)
 
-                if cell.flagged then
-                    drawTile("flag", cell)
-                elseif cell.questioned then
-                    drawTile("question", cell)
+                if tile.flagged then
+                    drawTile("flag", tile)
+                elseif tile.questioned then
+                    drawTile("question", tile)
                 end
             else
-                if cell.hasSkull then
-                    drawTile("skull", cell)
+                if tile.hasSkull then
+                    drawTile("skull", tile)
                 else
-                    drawTile("uncovered", cell)
-                    if cell.nearbySkullCount and cell.nearbySkullCount > 0 then
+                    drawTile("uncovered", tile)
+                    if tile.nearbySkullCount and tile.nearbySkullCount > 0 then
                         local numberNames = {
                             [1] = "one",
                             [2] = "two",
@@ -92,10 +92,10 @@ function CavernPuzzle1:drawBefore()
                             [8] = "eight"
                         }
 
-                        local numName = numberNames[cell.nearbySkullCount]
+                        local numName = numberNames[tile.nearbySkullCount]
 
                         if numName then
-                            drawTile(numName, cell)
+                            drawTile(numName, tile)
                         end
                     end
                 end
@@ -280,22 +280,8 @@ function CavernPuzzle1:revealTile(tile)
     end
 
     if tile.hasSkull then
-        print("Dead")
-        -- Need to work on the gameover and death logic
-        tile.uncovered = true
-        self.lives = self.lives - 1
-
-        if self.lives <= 0 then
-            for _, otherTile in ipairs(self.minesweeperTiles) do
-                if otherTile.hasSkull then
-                    otherTile.uncovered = true
-                end
-            end
-
-            self.dead = true
-
-            return
-        end
+        self:revealSkullTile(tile)
+        return
     end
 
     local stack = { tile }
@@ -316,6 +302,52 @@ function CavernPuzzle1:revealTile(tile)
     end
 
     self:checkWinCondition()
+end
+
+function CavernPuzzle1:revealSkullTile(skullTile)
+    local function handleGameOverState(roundLives)
+        if roundLives <= 0 then
+            currentLevel = MainArea(113, 100)
+            return
+        else
+            currentLevel = CavernPuzzle1(10, 216, self.gameDifficulty, self.roundLives)
+            return
+        end
+    end
+
+    local function revealAllSkullTiles()
+        for _, otherTile in ipairs(self.minesweeperTiles) do
+            if otherTile.hasSkull then
+                otherTile.uncovered = true
+            end
+        end
+    end
+
+    skullTile.uncovered = true
+
+    print("Skull revealed!")
+
+    if self.gameDifficulty == "easy" then
+        self.lives = self.lives - 1
+
+        if self.lives <= 0 and self.roundLives > 0 then
+            revealAllSkullTiles()
+
+            self.dead = true
+            self.roundLives = self.roundLives - 1
+            handleGameOverState(self.roundLives)
+
+            return
+        end
+    elseif self.gameDifficulty == "hard" then
+        revealAllSkullTiles()
+
+        self.dead = true
+        self.roundLives = self.roundLives - 1
+        handleGameOverState(self.roundLives)
+
+        return
+    end
 end
 
 function CavernPuzzle1:getAdjacentTiles(tile)
