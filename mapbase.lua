@@ -73,15 +73,15 @@ function MapBase:loadPortals()
     end
 
     -- Loop through each object in the portal layer and set up the portal
-    for _, obj in ipairs(layer.objects) do
+    for _, object in ipairs(layer.objects) do
         local portal = {
-            x = obj.x,
-            y = obj.y,
-            width = obj.width,
-            height = obj.height,
-            target_map = obj.properties.target_map, -- The map to switch too
-            spawn_x = obj.properties.spawn_x, -- X position to spawn in the new map
-            spawn_y = obj.properties.spawn_y, -- Y position to spawn in the new map
+            x = object.x,
+            y = object.y,
+            width = object.width,
+            height = object.height,
+            target_map = object.properties.target_map, -- The map to switch too
+            spawn_x = object.properties.spawn_x, -- X position to spawn in the new map
+            spawn_y = object.properties.spawn_y, -- Y position to spawn in the new map
             isPortal = true --Flag to identify this is a portal
         }
 

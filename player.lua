@@ -99,7 +99,7 @@ function Player:update(dt)
     self.y = actualY - self.collisionBox.yOffset
 
     -- Process any collisions that occurred during movement
-    for i = 1,len do
+    for i = 1, len do
         local col = cols[i].other
         -- If the player collided with a portal and has an onPortal callback call it
         if col.isPortal then

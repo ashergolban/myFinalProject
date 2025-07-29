@@ -5,7 +5,7 @@ function CavernPuzzle1:new(x, y, difficulty, roundLives)
 
     -- Create the player at the given coordinates and register them in the collision world
     self.player = Player(x, y, self.world)
-    
+
     -- Define a callback function triggered when the player touches a portal 
     -- this will switch the map
     self.player.onPortal = function (_, portal)
@@ -22,6 +22,7 @@ function CavernPuzzle1:new(x, y, difficulty, roundLives)
     self.won = false
     self.gameDifficulty = difficulty or "easy"
     self.roundLives = roundLives or 3
+    self.mapSwitchingDelay = 2.5
 
     if self.gameDifficulty == "easy" then
         self.lives = 3
@@ -30,6 +31,15 @@ end
 
 function CavernPuzzle1:update(dt)
     CavernPuzzle1.super.update(self, dt)
+
+    if self.switchDelay then
+        self.switchDelay = self.switchDelay - dt
+        if self.switchDelay <= 0 and self.delayedMapSwitch then
+            self.delayedMapSwitch()
+            self.switchDelay = nil
+            self.delayedMapSwitch = nil
+        end
+    end
 
     if self.minesweeperZone then
         local zone = self.minesweeperZone
@@ -335,7 +345,10 @@ function CavernPuzzle1:revealSkullTile(skullTile)
 
             self.dead = true
             self.roundLives = self.roundLives - 1
-            handleGameOverState(self.roundLives)
+            self.switchDelay = self.mapSwitchingDelay
+            self.delayedMapSwitch = function ()
+                handleGameOverState(self.roundLives)
+            end
 
             return
         end
@@ -344,7 +357,10 @@ function CavernPuzzle1:revealSkullTile(skullTile)
 
         self.dead = true
         self.roundLives = self.roundLives - 1
-        handleGameOverState(self.roundLives)
+        self.switchDelay = self.mapSwitchingDelay
+        self.delayedMapSwitch = function ()
+            handleGameOverState(self.roundLives)
+        end
 
         return
     end
