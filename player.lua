@@ -31,8 +31,8 @@ function Player:new(x, y, world)
 
     -- Add the player to the collision world with their collision box dimensions
     self.world:add(self, self.x + self.collisionBox.xOffset, 
-    self.y + self.collisionBox.yOffset, 
-    self.collisionBox.width, 
+    self.y + self.collisionBox.yOffset,
+    self.collisionBox.width,
     self.collisionBox.height)
 end
 
@@ -80,7 +80,7 @@ function Player:update(dt)
 
     -- Defin how collisions should be resolved, either pass through or solid objects
     local function playerCollisionFilter(item, other)
-        if other.isPortal or other.isMinesweeperTile then
+        if other.isPortal or other.isMinesweeperTile or other.isLever then
             return "cross"
         end
         return "slide"

@@ -18,7 +18,8 @@ function love.load()
 
     showDebug = false
     -- currentLevel = MainArea(113, 100)
-    currentLevel = CavernPuzzle1(10, 216)
+    -- currentLevel = CavernPuzzle1(10, 216)
+    currentLevel = CavernArea(80, 383)
 end
 
 function love.update(dt)
@@ -32,6 +33,10 @@ end
 function love.keypressed(key)
     if key == "v" then
         showDebug = not showDebug
+    end
+
+    if currentLevel and currentLevel.keypressed then
+        currentLevel:keypressed(key)
     end
 end
 

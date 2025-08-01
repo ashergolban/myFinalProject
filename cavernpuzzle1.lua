@@ -20,8 +20,8 @@ function CavernPuzzle1:new(x, y, difficulty, roundLives)
 
     self.firstTileRevealed = false
     self.won = false
-    self.gameDifficulty = difficulty or "easy"
-    self.roundLives = roundLives or 3
+    self.gameDifficulty = difficulty
+    self.roundLives = roundLives
     self.mapSwitchingDelay = 2.5
 
     if self.gameDifficulty == "easy" then
@@ -58,11 +58,7 @@ end
 
 function CavernPuzzle1:drawBefore()
     -- Draw only all visible tile layers in the correct order
-    for _, layer in ipairs(self.map.layers) do
-        if layer.type == "tilelayer" and layer.visible then
-            self.map:drawLayer(layer)
-        end
-    end
+    CavernPuzzle1.super.drawBefore(self)
 
     if self.minesweeperZone then
         local zone = self.minesweeperZone
@@ -118,9 +114,9 @@ function CavernPuzzle1:drawBefore()
         love.graphics.setColor(1, 1, 1)
     end
     -- Debugging purposes 
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.print('selected x: '..selectedX..' selected y: '..selectedY)
-    love.graphics.setColor(1, 1, 1)
+    -- love.graphics.setColor(0, 0, 0)
+    -- love.graphics.print('selected x: '..selectedX..' selected y: '..selectedY)
+    -- love.graphics.setColor(1, 1, 1)
 end
 
 function CavernPuzzle1:minesweeperFunctionality()
