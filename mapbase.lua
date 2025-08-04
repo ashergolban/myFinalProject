@@ -63,14 +63,14 @@ function MapBase:drawDebug()
 end
 
 function MapBase:loadPortals()
-    -- Initialize an empty list to hold all portal objects
-    self.portals = {}
-
     -- First look for a layer name "Portals" of type "objectgroup" in the map
     local layer = self.map.layers["Portals"]
     if not layer or layer.type ~= "objectgroup" then
         return -- No portal layer was found, dont load anything
     end
+
+    -- Initialize an empty list to hold all portal objects
+    self.portals = {}
 
     -- Loop through each object in the portal layer and set up the portal
     for _, object in ipairs(layer.objects) do
@@ -85,7 +85,7 @@ function MapBase:loadPortals()
             isPortal = true --Flag to identify this is a portal
         }
 
-        -- Add the protal to the collision world so the player can detect it
+        -- Add the portal to the collision world so the player can detect it
         self.world:add(portal, portal.x, portal.y, portal.width, portal.height)
 
         -- Store the portal in the table

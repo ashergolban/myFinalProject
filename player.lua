@@ -108,6 +108,7 @@ function Player:update(dt)
             end
         end
 
+        -- If the player collided with a tile from the puzzle and has an onRevealTile callback call it
         if col.isMinesweeperTile and not col.uncovered and not col.flagged then
             if self.onRevealTile then
                 self:onRevealTile(col)
