@@ -1,5 +1,8 @@
 CavernPuzzle1 = MapBase:extend()
 
+-- Adapted from "Flowers - A tutorial for Lua and LÖVE 11" by berbasoft
+-- https://berbasoft.com/simplegametutorials/love/flowers/
+
 function CavernPuzzle1:new(x, y, difficulty, roundLives)
     CavernPuzzle1.super.new(self, "maps/CavePuzzle1.lua")
 
@@ -316,7 +319,11 @@ function CavernPuzzle1:revealTile(tile)
             -- add all adjacent safe tiles to the stack to reveal them recursively
             if currentTile.nearbySkullCount == 0 and not currentTile.questioned then
                 for _, adjacentTile in ipairs(self:getAdjacentTiles(currentTile)) do
-                    if adjacentTile and not adjacentTile.uncovered and not adjacentTile.flagged and not adjacentTile.hasSkull then
+                    if adjacentTile
+                       and not adjacentTile.uncovered
+                       and not adjacentTile.flagged
+                       and not adjacentTile.hasSkull
+                    then
                         table.insert(stack, adjacentTile)
                     end
                 end
@@ -340,7 +347,9 @@ function CavernPuzzle1:placeSkulls(startingTile)
         local currentTile = self.minesweeperTiles[index]
 
         -- Only place a skull if it's not the starting tile and hasn't been used
-        if not usedSkullPositions[index] and not (currentTile.row == startingTile.row and currentTile.col == startingTile.col) then
+        if not usedSkullPositions[index]
+           and not (currentTile.row == startingTile.row and currentTile.col == startingTile.col)
+        then
             usedSkullPositions[index] = true
             currentTile.hasSkull = true
             placedSkulls = placedSkulls + 1

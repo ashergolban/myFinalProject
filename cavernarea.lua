@@ -15,8 +15,22 @@ function CavernArea:new(x, y)
 
     -- Quads representing the left and right lever states
     self.leverDirection = {
-        left = love.graphics.newQuad(2 * objectsTileWidth, 9 * objectsTileHeight, objectsTileWidth, objectsTileHeight, self.objectsImage:getWidth(), self.objectsImage:getHeight()),
-        right = love.graphics.newQuad(3 * objectsTileWidth, 9 * objectsTileHeight, objectsTileWidth, objectsTileHeight, self.objectsImage:getWidth(), self.objectsImage:getHeight())
+        left = love.graphics.newQuad(
+            2 * objectsTileWidth,
+            9 * objectsTileHeight,
+            objectsTileWidth,
+            objectsTileHeight,
+            self.objectsImage:getWidth(),
+            self.objectsImage:getHeight()
+        ),
+        right = love.graphics.newQuad(
+            3 * objectsTileWidth,
+            9 * objectsTileHeight,
+            objectsTileWidth,
+            objectsTileHeight,
+            self.objectsImage:getWidth(),
+            self.objectsImage:getHeight()
+        )
     }
 
     -- Define a callback function triggered when the player touches a portal 
