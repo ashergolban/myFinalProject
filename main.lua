@@ -17,9 +17,7 @@ function love.load()
     require "mainarea"
 
     showDebug = false
-    -- currentLevel = MainArea(113, 100)
-    -- currentLevel = CavernPuzzle1(10, 216)
-    currentLevel = CavernArea(80, 383)
+    currentLevel = MainArea(113, 100)
 end
 
 function love.update(dt)

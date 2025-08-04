@@ -78,7 +78,6 @@ function CavernPuzzle1:drawBefore()
 
     if self.minesweeperZone then
         -- Intiamize variables necessary for the drawing Minesweeper tiles
-        -- local zone = self.minesweeperZone -- Used for the Debugging
         local numberNames = {
             [1] = "one",
             [2] = "two",
@@ -126,16 +125,7 @@ function CavernPuzzle1:drawBefore()
                 end
             end
         end
-
-        -- Debugging purposes
-        -- love.graphics.setColor(1, 1, 1)
-        -- love.graphics.rectangle("line", zone.x, zone.y, zone.width, zone.height)
-        -- love.graphics.setColor(1, 1, 1)
     end
-    -- Debugging purposes 
-    -- love.graphics.setColor(0, 0, 0)
-    -- love.graphics.print('selected x: '..self.selectedX..' selected y: '..self.selectedY)
-    -- love.graphics.setColor(1, 1, 1)
 end
 
 function CavernPuzzle1:minesweeperFunctionality()
@@ -407,7 +397,6 @@ end
 function CavernPuzzle1:revealSkullTile(skullTile)
     -- Reveal the skull tile
     skullTile.uncovered = true
-    -- print("Skull revealed!") -- Debugging purposes
 
     -- Apply logic depending on the game difficulty
     if self.gameDifficulty == "easy" then
@@ -445,7 +434,6 @@ function CavernPuzzle1:checkWinCondition()
 
     -- If win conditions are met and the win hasn't been triggered, do it now
     if not self.won then
-        -- print("You win!") -- Debugging purposes
         self:clearExitBoulders()
     end
 end
