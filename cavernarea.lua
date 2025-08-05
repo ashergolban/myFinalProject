@@ -59,7 +59,7 @@ function CavernArea:loadLevers()
                 width = object.width,
                 height = object.height,
                 state = "left", -- Inital direction the lever is facing
-                isLever = true --Flag to identify this is a portal
+                isLever = true --Flag to identify this is a lever
             }
 
             -- Add the lever to the collision world for interaction with the player

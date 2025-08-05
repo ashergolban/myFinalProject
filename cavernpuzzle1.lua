@@ -531,6 +531,10 @@ function CavernPuzzle1:switchMap(portal)
     local spawnX, spawnY = portal.spawn_x, portal.spawn_y
     local map = portal.target_map
 
+    if map == "puzzle2" then
+        currentLevel = CavernPuzzle2(spawnX, spawnY)
+    end
+
     -- Only allows switching if the player has won the puzzle
     if not self.won then
         return

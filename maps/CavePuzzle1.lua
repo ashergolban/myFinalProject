@@ -10,7 +10,7 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextlayerid = 9,
-  nextobjectid = 729,
+  nextobjectid = 730,
   properties = {},
   tilesets = {
     {
@@ -252,6 +252,23 @@ return {
             ["spawn_x"] = 455,
             ["spawn_y"] = 247,
             ["target_map"] = "cavern"
+          }
+        },
+        {
+          id = 729,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 288,
+          y = 0,
+          width = 48,
+          height = 8.875,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["spawn_x"] = 48,
+            ["spawn_y"] = 444,
+            ["target_map"] = "puzzle2"
           }
         }
       }

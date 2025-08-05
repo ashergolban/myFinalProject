@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="44">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="47">
+ <editorsettings>
+  <export target="CavePuzzle2.lua" format="lua"/>
+ </editorsettings>
  <tileset firstgid="1" name="decoration-tiles" tilewidth="16" tileheight="16" tilecount="1440" columns="40">
   <image source="gfx/Overworld.png" width="640" height="576"/>
  </tileset>
@@ -142,13 +145,25 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="9" name="PuzzleTiles">
+  <object id="45" name="puzzle_tile" x="224" y="176" width="16" height="16"/>
+  <object id="46" name="puzzle_tile" x="288" y="176" width="16" height="16"/>
+ </objectgroup>
  <objectgroup id="7" name="Button">
   <object id="32" name="puzzle_button" x="256" y="128" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="4" name="Portals"/>
+ <objectgroup id="4" name="Portals">
+  <object id="44" x="32" y="472.091" width="48" height="7.90909">
+   <properties>
+    <property name="spawn_x" type="int" value="303"/>
+    <property name="spawn_y" type="int" value="2"/>
+    <property name="target_map" value="puzzle1"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="5" name="Collisions">
   <properties>
-   <property name="collidable" type="bool" value="false"/>
+   <property name="collidable" type="bool" value="true"/>
   </properties>
   <object id="1" x="368" y="208" width="112" height="16"/>
   <object id="2" x="352" y="224" width="16" height="16"/>

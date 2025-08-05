@@ -9,8 +9,8 @@ return {
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 9,
-  nextobjectid = 44,
+  nextlayerid = 10,
+  nextobjectid = 47,
   properties = {},
   tilesets = {
     {
@@ -276,6 +276,48 @@ return {
     {
       type = "objectgroup",
       draworder = "topdown",
+      id = 9,
+      name = "PuzzleTiles",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 45,
+          name = "puzzle_tile",
+          type = "",
+          shape = "rectangle",
+          x = 224,
+          y = 176,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 46,
+          name = "puzzle_tile",
+          type = "",
+          shape = "rectangle",
+          x = 288,
+          y = 176,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
       id = 7,
       name = "Button",
       class = "",
@@ -315,7 +357,25 @@ return {
       parallaxx = 1,
       parallaxy = 1,
       properties = {},
-      objects = {}
+      objects = {
+        {
+          id = 44,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 32,
+          y = 472.091,
+          width = 48,
+          height = 7.90909,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["spawn_x"] = 303,
+            ["spawn_y"] = 2,
+            ["target_map"] = "puzzle1"
+          }
+        }
+      }
     },
     {
       type = "objectgroup",
@@ -330,7 +390,7 @@ return {
       parallaxx = 1,
       parallaxy = 1,
       properties = {
-        ["collidable"] = false
+        ["collidable"] = true
       },
       objects = {
         {

@@ -9,15 +9,23 @@ function love.load()
 
     love.graphics.setDefaultFilter("nearest", "nearest")
 
+    -- Base classes
     require "entity"
     require "player"
     require "mapbase"
+    require "puzzlegamebase"
+
+    -- Puzzle maps
     require "cavernpuzzle1"
-    require "cavernarea"
+    require "cavernpuzzle2"
+
+    -- Game areas
     require "mainarea"
+    require "cavernarea"
 
     showDebug = false
-    currentLevel = MainArea(113, 100)
+    -- currentLevel = MainArea(113, 100)
+    currentLevel = CavernPuzzle2(48, 444)
 end
 
 function love.update(dt)
