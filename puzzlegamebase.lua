@@ -1,19 +1,20 @@
 PuzzleGameBase = MapBase:extend()
 
+function PuzzleGameBase:drawTileSet(image, quadSet, tiles, offsetX, offsetY)
+    for _, tile in ipairs(tiles) do
+        local quad = quadSet[tile.state]
+        love.graphics.draw(image, quad, tile.x + (offsetX or 0), tile.y + (offsetY or 0))
+    end
+end
+
 function PuzzleGameBase:drawBefore()
     PuzzleGameBase.super.drawBefore(self)
 
     -- Draw each tile with the correct graphic based on its state
-    for _, tile in ipairs(self.puzzleTiles) do
-        local loadPuzzleTile = self.puzzleTile[tile.state]
-        love.graphics.draw(self.puzzleTilesImage, loadPuzzleTile, tile.x, tile.y)
-    end
+    self:drawTileSet(self.puzzleTilesImage, self.puzzleTile, self.puzzleTiles)
 
     -- Draw each button with the correct graphic based on its state
-    for _, tile in ipairs(self.buttons) do
-        local loadButtonState = self.buttonState[tile.state]
-        love.graphics.draw(self.objectsImage, loadButtonState, tile.x + 1, tile.y + 1)
-    end
+    self:drawTileSet(self.objectsImage, self.buttonState, self.buttons, 1, 1)
 end
 
 function PuzzleGameBase:update(dt)
@@ -82,43 +83,26 @@ function PuzzleGameBase:updateTileState()
     self.previousTiles = self.currentTiles
 end
 
+function PuzzleGameBase:makeQuad(tileX, tileY, tileWidth, tileHeight, image)
+    return love.graphics.newQuad(
+            tileX * tileWidth,
+            tileY * tileHeight,
+            tileWidth,
+            tileHeight,
+            image:getWidth(),
+            image:getHeight()
+            )
+end
+
 function PuzzleGameBase:loadPuzzleTiles()
     self.puzzleTilesImage = love.graphics.newImage("maps/gfx/puzzle2_tiles.png")
     local puzzleTileWidth, puzzleTileHeight = 16, 16
 
     self.puzzleTile = {
-        xTile = love.graphics.newQuad(
-            0 * puzzleTileWidth,
-            0 * puzzleTileHeight,
-            puzzleTileWidth,
-            puzzleTileHeight,
-            self.puzzleTilesImage:getWidth(),
-            self.puzzleTilesImage:getHeight()
-        ),
-        oTile = love.graphics.newQuad(
-            1 * puzzleTileWidth,
-            0 * puzzleTileHeight,
-            puzzleTileWidth,
-            puzzleTileHeight,
-            self.puzzleTilesImage:getWidth(),
-            self.puzzleTilesImage:getHeight()
-        ),
-        triangleTile = love.graphics.newQuad(
-            2 * puzzleTileWidth,
-            0 * puzzleTileHeight,
-            puzzleTileWidth,
-            puzzleTileHeight,
-            self.puzzleTilesImage:getWidth(),
-            self.puzzleTilesImage:getHeight()
-        ),
-        oCorrectTile = love.graphics.newQuad(
-            3 * puzzleTileWidth,
-            0 * puzzleTileHeight,
-            puzzleTileWidth,
-            puzzleTileHeight,
-            self.puzzleTilesImage:getWidth(),
-            self.puzzleTilesImage:getHeight()
-        )
+        xTile = self:makeQuad(0, 0, puzzleTileWidth, puzzleTileHeight, self.puzzleTilesImage),
+        oTile = self:makeQuad(1, 0, puzzleTileWidth, puzzleTileHeight, self.puzzleTilesImage),
+        triangleTile = self:makeQuad(2, 0, puzzleTileWidth, puzzleTileHeight, self.puzzleTilesImage),
+        oCorrectTile = self:makeQuad(3, 0, puzzleTileWidth, puzzleTileHeight, self.puzzleTilesImage)
     }
 
     -- Load spirte sheet containing button graphics 
@@ -126,22 +110,8 @@ function PuzzleGameBase:loadPuzzleTiles()
     local objectsTileWidth, objectsTileHeight = 16, 16 -- Dimensions of each tiles
 
     self.buttonState = {
-        up = love.graphics.newQuad(
-            0 * objectsTileWidth,
-            9 * objectsTileHeight,
-            objectsTileWidth,
-            objectsTileHeight,
-            self.objectsImage:getWidth(),
-            self.objectsImage:getHeight()
-        ),
-        down = love.graphics.newQuad(
-            1 * objectsTileWidth,
-            9 * objectsTileHeight,
-            objectsTileWidth,
-            objectsTileHeight,
-            self.objectsImage:getWidth(),
-            self.objectsImage:getHeight()
-        )
+        up = self:makeQuad(0, 9, objectsTileWidth, objectsTileHeight, self.objectsImage),
+        down = self:makeQuad(1, 9, objectsTileWidth, objectsTileHeight, self.objectsImage)
     }
 
     self.previousTiles = {}
