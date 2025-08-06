@@ -149,7 +149,7 @@
   <object id="45" name="puzzle_tile" x="224" y="176" width="16" height="16"/>
   <object id="46" name="puzzle_tile" x="288" y="176" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="7" name="Button">
+ <objectgroup id="7" name="Buttons">
   <object id="32" name="puzzle_button" x="256" y="128" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="4" name="Portals">

@@ -17,12 +17,6 @@ function CavernPuzzle2:new(x, y)
     self.player.onPortal = function(_, portal)
         self:switchMap(portal)
     end
-
-    -- Defin a callback function triggered when the player touches a tile
-    -- this will change the tile
-    self.player.onChangeTile = function (_, tile)
-        self:changeTile(tile)
-    end
 end
 
 function CavernPuzzle2:switchMap(portal)

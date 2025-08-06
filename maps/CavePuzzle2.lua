@@ -319,7 +319,7 @@ return {
       type = "objectgroup",
       draworder = "topdown",
       id = 7,
-      name = "Button",
+      name = "Buttons",
       class = "",
       visible = true,
       opacity = 1,

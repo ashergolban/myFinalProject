@@ -84,6 +84,7 @@ function Player:update(dt)
            or other.isMinesweeperTile
            or other.isLever
            or other.isPuzzleTile
+           or other.isButton
         then
             return "cross"
         end
@@ -102,11 +103,6 @@ function Player:update(dt)
     self.x = actualX - self.collisionBox.xOffset
     self.y = actualY - self.collisionBox.yOffset
 
-    if self.onChangeTile then
-        self.previousPuzzleTiles = self.currentPuzzleTiles or {}
-        self.currentPuzzleTiles = {}
-    end
-
     -- Process any collisions that occurred during movement
     for i = 1, len do
         local col = cols[i].other
@@ -121,23 +117,6 @@ function Player:update(dt)
         if col.isMinesweeperTile and not col.uncovered and not col.flagged then
             if self.onRevealTile then
                 self:onRevealTile(col)
-            end
-        end
-
-        if col.isPuzzleTile then
-            table.insert(self.currentPuzzleTiles, col)
-
-            local wasOnTile = false
-            for _, previousTile in ipairs(self.previousPuzzleTiles) do
-                if previousTile == col then
-                    wasOnTile = true
-                end
-            end
-
-            if not wasOnTile then
-                if self.onChangeTile then
-                    self:onChangeTile(col)
-                end
             end
         end
     end
