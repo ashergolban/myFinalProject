@@ -18,6 +18,7 @@ function love.load()
     -- Puzzle maps
     require "cavernpuzzle1"
     require "cavernpuzzle2"
+    require "cavernpuzzle3"
 
     -- Game areas
     require "mainarea"

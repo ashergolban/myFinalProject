@@ -1,7 +1,7 @@
-CavernPuzzle2 = PuzzleGameBase:extend()
+CavernPuzzle3 = PuzzleGameBase:extend()
 
-function CavernPuzzle2:new(x, y)
-    CavernPuzzle2.super.new(self, "maps/CavePuzzle2.lua")
+function CavernPuzzle3:new(x, y)
+    CavernPuzzle3.super.new(self, "maps/CavePuzzle3.lua")
 
     -- Create the player at the given coordinates and register them in the collision world
     self.player = Player (x, y, self.world)
@@ -19,16 +19,13 @@ function CavernPuzzle2:new(x, y)
     end
 end
 
-function CavernPuzzle2:switchMap(portal)
+function CavernPuzzle3:switchMap(portal)
     -- Switches the current level with a new instance
     -- The player will spawn at the coordinates defined in the portal's properties
     local spawnX, spawnY = portal.spawn_x, portal.spawn_y
     local map = portal.target_map
-    
-    if map == "puzzle1" then
-        currentLevel = CavernPuzzle1(spawnX, spawnY)
 
-    elseif map == "puzzle3" then
-        currentLevel = CavernPuzzle3(spawnX, spawnY)
+    if map == "puzzle2" then
+        currentLevel = CavernPuzzle2(spawnX, spawnY)
     end
 end
