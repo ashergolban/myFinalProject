@@ -29,7 +29,7 @@ function love.load()
     -- currentLevel = MainArea(113, 100)
     -- currentLevel = CavernPuzzle2(48, 444)
     -- currentLevel = CavernPuzzle3(12, 165)
-    -- currentLevel = CavernPuzzle4(439, 40)
+    currentLevel = CavernPuzzle4(439, 40)
 end
 
 function love.update(dt)

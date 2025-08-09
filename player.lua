@@ -36,7 +36,6 @@ function Player:new(x, y, world)
     self.collisionBox.height)
 end
 
-
 function Player:update(dt)
     Player.super.update(self, dt)
 
@@ -100,6 +99,7 @@ function Player:update(dt)
            or other.isPuzzleTile
            or other.isButton
            or other.isIce
+           or other.isFire
         then
             return "cross"
         end
@@ -189,6 +189,7 @@ function Player:slideOnIce(dt)
            or other.isPuzzleTile
            or other.isButton
            or other.isIce
+           or other.isFire
         then
             return "cross"
         end

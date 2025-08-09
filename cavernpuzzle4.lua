@@ -12,11 +12,42 @@ function CavernPuzzle4:new(x, y)
     self:loadPuzzleTiles()
     self:loadBoulders()
     self:loadIceBlocks()
+    self:loadFires()
 
     -- Define a callback function triggered when the player touches a portal 
     -- this will switch the map
     self.player.onPortal = function(_, portal)
         self:switchMap(portal)
+    end
+end
+
+function CavernPuzzle4:update(dt)
+    CavernPuzzle4.super.update(self, dt)
+
+    self:fireFunctionality()
+end
+
+function CavernPuzzle4:fireFunctionality()
+    if not self.fires then
+        return
+    end
+
+    local playerX, playerY, playerWidth, playerHeight = self.world:getRect(self.player)
+    local overlaps = self.world:queryRect(playerX, playerY, playerWidth, playerHeight)
+
+    for _, fire in ipairs(self.fires) do
+        local onFire = false
+
+        for _, object in ipairs(overlaps) do
+            if object == fire then
+                onFire = true
+                break
+            end
+        end
+
+        if onFire then
+            currentLevel = CavernPuzzle4(163, 326)
+        end
     end
 end
 
@@ -40,6 +71,30 @@ function CavernPuzzle4:loadIceBlocks()
 
             self.world:add(iceBlock, iceBlock.x, iceBlock.y, iceBlock.width, iceBlock.height)
             table.insert(self.iceBlocks, iceBlock)
+        end
+    end
+end
+
+function CavernPuzzle4:loadFires()
+    local layer = self.map.layers["Fires"]
+    if not layer or layer.type ~= "objectgroup" then
+        return
+    end
+
+    self.fires = {}
+
+    for _, object in ipairs(layer.objects) do
+        if object.name == "fire" then
+            local fire = {
+                x = object.x,
+                y = object.y,
+                width = object.width,
+                height = object.height,
+                isFire = true
+            }
+
+            self.world:add(fire, fire.x, fire.y, fire.width, fire.height)
+            table.insert(self.fires, fire)
         end
     end
 end
