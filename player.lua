@@ -36,34 +36,48 @@ function Player:new(x, y, world)
     self.collisionBox.height)
 end
 
+
 function Player:update(dt)
     Player.super.update(self, dt)
+
+    self:checkIfOnIce()
+
+    if self.onIce then
+        self:slideOnIce(dt)
+        return
+    end
 
     -- Intialize variables for movment detection and x and y displacement of the character
     local dx, dy = 0, 0
     local isMoving = false
 
-    -- Character movement logic
-    if love.keyboard.isDown("left") then
-        dx = dx - self.speed * dt
-        self.anim = self.animations.left
-        isMoving = true
-    end
-    if love.keyboard.isDown("right") then
-        dx = dx + self.speed * dt
-        self.anim = self.animations.right
-        isMoving = true
-    end
+    if not self.onIce then
+        -- Character movement logic
+        if love.keyboard.isDown("left") then
+            self.lastDirection = "left"
+            dx = dx - self.speed * dt
+            self.anim = self.animations.left
+            isMoving = true
+        end
+        if love.keyboard.isDown("right") then
+            self.lastDirection = "right"
+            dx = dx + self.speed * dt
+            self.anim = self.animations.right
+            isMoving = true
+        end
 
-    if love.keyboard.isDown("up") then
-        dy = dy - self.speed * dt
-        self.anim = self.animations.up
-        isMoving = true
-    end
-    if love.keyboard.isDown("down") then
-        dy = dy + self.speed * dt
-        self.anim = self.animations.down
-        isMoving = true
+        if love.keyboard.isDown("up") then
+            self.lastDirection = "up"
+            dy = dy - self.speed * dt
+            self.anim = self.animations.up
+            isMoving = true
+        end
+        if love.keyboard.isDown("down") then
+            self.lastDirection = "down"
+            dy = dy + self.speed * dt
+            self.anim = self.animations.down
+            isMoving = true
+        end
     end
 
     -- If the player is idle play the frame corresponding to them standing 
@@ -85,6 +99,7 @@ function Player:update(dt)
            or other.isLever
            or other.isPuzzleTile
            or other.isButton
+           or other.isIce
         then
             return "cross"
         end
@@ -119,6 +134,85 @@ function Player:update(dt)
                 self:onRevealTile(col)
             end
         end
+    end
+end
+
+function Player:checkIfOnIce()
+    local PlayerX, PlayerY, PlayerW, PlayerH = self.world:getRect(self)
+    local overlaps = self.world:queryRect(PlayerX, PlayerY, PlayerW, PlayerH)
+
+    local foundIce = false
+    for _, object in ipairs(overlaps) do
+        if object.isIce then
+            foundIce = true
+            break
+        end
+    end
+
+    if foundIce then
+        if not self.onIce then
+            self.slideDirection = self.lastDirection
+        end
+        self.onIce = true
+    else
+        self.onIce = false
+    end
+end
+
+function Player:slideOnIce(dt)
+    local dx, dy = 0, 0
+
+    if self.slideDirection == "left" then
+        dx = -1
+        self.anim = self.animations.left
+    elseif self.slideDirection == "right" then
+        dx = 1
+        self.anim = self.animations.right
+    elseif self.slideDirection == "up" then
+        dy = -1
+        self.anim = self.animations.up
+    elseif self.slideDirection == "down" then
+        dy = 1
+        self.anim = self.animations.down
+    end
+
+    self.anim:gotoFrame(1)
+
+    local goalX = self.x + dx * self.speed * dt
+    local goalY = self.y + dy * self.speed * dt
+
+        -- Defin how collisions should be resolved, either pass through or solid objects
+    local function playerCollisionFilter(item, other)
+        if other.isPortal
+           or other.isMinesweeperTile
+           or other.isLever
+           or other.isPuzzleTile
+           or other.isButton
+           or other.isIce
+        then
+            return "cross"
+        end
+        return "slide"
+    end
+
+    local actualX, actualY, cols, len = self.world:move(self,
+        goalX + self.collisionBox.xOffset,
+        goalY + self.collisionBox.yOffset,
+        playerCollisionFilter
+    )
+
+    self.x = actualX - self.collisionBox.xOffset
+    self.y = actualY - self.collisionBox.yOffset
+
+    self:checkIfOnIce()
+    if not self.onIce then
+        self.slideDirection = nil
+        return
+    end
+
+    if len > 0 then
+        self.onIce = false
+        self.slideDirection = nil
     end
 end
 

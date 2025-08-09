@@ -19,6 +19,7 @@ function love.load()
     require "cavernpuzzle1"
     require "cavernpuzzle2"
     require "cavernpuzzle3"
+    require "cavernpuzzle4"
 
     -- Game areas
     require "mainarea"
@@ -26,7 +27,9 @@ function love.load()
 
     showDebug = false
     -- currentLevel = MainArea(113, 100)
-    currentLevel = CavernPuzzle2(48, 444)
+    -- currentLevel = CavernPuzzle2(48, 444)
+    -- currentLevel = CavernPuzzle3(12, 165)
+    -- currentLevel = CavernPuzzle4(439, 40)
 end
 
 function love.update(dt)

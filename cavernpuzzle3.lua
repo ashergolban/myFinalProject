@@ -27,5 +27,7 @@ function CavernPuzzle3:switchMap(portal)
 
     if map == "puzzle2" then
         currentLevel = CavernPuzzle2(spawnX, spawnY)
+    elseif map == "puzzle4" then
+        currentLevel = CavernPuzzle4(spawnX, spawnY)
     end
 end

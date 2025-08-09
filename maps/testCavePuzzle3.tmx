@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="76">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="77">
  <editorsettings>
   <export target="CavePuzzle3.lua" format="lua"/>
  </editorsettings>
@@ -138,6 +138,13 @@
     <property name="spawn_x" type="int" value="451"/>
     <property name="spawn_y" type="int" value="159"/>
     <property name="target_map" value="puzzle2"/>
+   </properties>
+  </object>
+  <object id="76" x="416" y="471.5" width="48" height="8.5">
+   <properties>
+    <property name="spawn_x" type="int" value="431"/>
+    <property name="spawn_y" type="int" value="7"/>
+    <property name="target_map" value="puzzle4"/>
    </properties>
   </object>
  </objectgroup>
