@@ -284,6 +284,11 @@ function PuzzleGameBase:checkWinCondition()
         end
 
         self:clearExitBoulders()
+
+        -- Call clearFires if defined (speciffically for map CavernPuzzle4)
+        if self.clearFires then
+            self:clearFires()
+        end
     else
         -- Reset all tiles to the X tile state
         for _, tile in ipairs(self.puzzleTiles) do

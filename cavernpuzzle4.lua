@@ -111,6 +111,21 @@ function CavernPuzzle4:loadFires()
     end
 end
 
+function CavernPuzzle4:clearFires()
+    -- Remove all fires from the collision world
+    for _, fire in ipairs(self.fires) do
+        if self.world:hasItem(fire) then
+            self.world:remove(fire)
+        end
+    end
+
+    -- Hide the decorative fires tile layer
+    local layer = self.map.layers["FireDecorations"]
+    if layer and layer.type == "tilelayer" then
+        layer.visible = false
+    end
+end
+
 function CavernPuzzle4:switchMap(portal)
     -- Switches the current level with a new instance
     -- The player will spawn at the coordinates defined in the portal's properties
