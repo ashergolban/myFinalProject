@@ -220,7 +220,7 @@ function CavernPuzzle1:loadMinesweeperArea()
                 nearbySkullCount = 0 -- Count for the amount of nearbySkulls 
             }
 
-            -- Ad the tile to the collision world for interaction with the player
+            -- Add the tile to the collision world for interaction with the player
             self.world:add(tile, tile.x, tile.y, tile.width, tile.height)
 
             -- Store the tile in table
@@ -532,7 +532,7 @@ function CavernPuzzle1:switchMap(portal)
     local map = portal.target_map
 
     if map == "puzzle2" then
-        currentLevel = CavernPuzzle2(spawnX, spawnY)
+        currentLevel = CavernPuzzle2and3(spawnX, spawnY, map)
     end
 
     -- Only allows switching if the player has won the puzzle

@@ -30,7 +30,7 @@ function Player:new(x, y, world)
     self.world = world
 
     -- Add the player to the collision world with their collision box dimensions
-    self.world:add(self, self.x + self.collisionBox.xOffset, 
+    self.world:add(self, self.x + self.collisionBox.xOffset,
     self.y + self.collisionBox.yOffset,
     self.collisionBox.width,
     self.collisionBox.height)

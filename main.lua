@@ -17,7 +17,7 @@ function love.load()
 
     -- Puzzle maps
     require "cavernpuzzle1"
-    require "cavernpuzzle2"
+    require "cavernpuzzle2and3"
     require "cavernpuzzle3"
     require "cavernpuzzle4"
 
@@ -27,8 +27,8 @@ function love.load()
 
     showDebug = false
     -- currentLevel = MainArea(113, 100)
-    -- currentLevel = CavernPuzzle2(48, 444)
-    -- currentLevel = CavernPuzzle3(12, 165)
+    -- currentLevel = CavernPuzzle2and3(48, 444, "puzzle2")
+    -- currentLevel = CavernPuzzle2and3(12, 165, "puzzle3")
     currentLevel = CavernPuzzle4(439, 40)
 end
 

@@ -6,11 +6,11 @@ function CavernPuzzle4:new(x, y)
     -- Create the player at the given coordinates and register them in the collision world
     self.player = Player (x, y, self.world)
 
-    -- Initialize core variables necessary for the game
+    -- Initialize the game state variable to track if the puzzle is solved
     self.won = false
 
+    -- Load puzzle tile data and graphics
     self:loadPuzzleTiles()
-    self:loadBoulders()
     self:loadIceBlocks()
     self:loadFires()
 
@@ -24,41 +24,43 @@ end
 function CavernPuzzle4:update(dt)
     CavernPuzzle4.super.update(self, dt)
 
+    -- Handle fire related logic
     self:fireFunctionality()
 end
 
 function CavernPuzzle4:fireFunctionality()
+    -- If fires is not defined, don't proceed
     if not self.fires then
         return
     end
 
-    local playerX, playerY, playerWidth, playerHeight = self.world:getRect(self.player)
-    local overlaps = self.world:queryRect(playerX, playerY, playerWidth, playerHeight)
+    -- Get all objects currently overlapping the player
+    local overlaps = self:getPlayerOverlaps()
 
+    -- Check each fire to see if the player is overlapping any fire objects
     for _, fire in ipairs(self.fires) do
-        local onFire = false
-
         for _, object in ipairs(overlaps) do
             if object == fire then
-                onFire = true
-                break
+                -- If the player touched a fire, reset the puzzle by reloading the level and reposition the player
+                currentLevel = CavernPuzzle4(163, 326)
+                return
             end
-        end
-
-        if onFire then
-            currentLevel = CavernPuzzle4(163, 326)
         end
     end
 end
 
 function CavernPuzzle4:loadIceBlocks()
+    -- First look for a layer name "IceBlocks" of type "objectgroup" in the map
     local layer = self.map.layers["IceBlocks"]
     if not layer or layer.type ~= "objectgroup" then
-        return
+        return -- No IceBlocks layer was found, don't load anything
     end
 
+    -- Initialize an empty table to hold all iceblocks objects
     self.iceBlocks = {}
 
+    -- Loop through each object in the iceblocks, looking for an object called 
+    -- "ice_block" layer and set up the ice block
     for _, object in ipairs(layer.objects) do
         if object.name == "ice_block" then
             local iceBlock = {
@@ -66,23 +68,30 @@ function CavernPuzzle4:loadIceBlocks()
                 y = object.y,
                 width = object.width,
                 height = object.height,
-                isIce = true
+                isIce = true -- Flag to identify this is a ice block
             }
 
+            -- Add the ice block to the collision world for interaction with the player
             self.world:add(iceBlock, iceBlock.x, iceBlock.y, iceBlock.width, iceBlock.height)
+
+            -- Sotre the ice blocks in the table
             table.insert(self.iceBlocks, iceBlock)
         end
     end
 end
 
 function CavernPuzzle4:loadFires()
+    -- First look for a layer name "Fires" of type "objectgroup" in the map
     local layer = self.map.layers["Fires"]
     if not layer or layer.type ~= "objectgroup" then
-        return
+        return -- No Fires layer was found, don't load anything
     end
 
+    -- Initialize an empty table to hold all fires objects
     self.fires = {}
 
+    -- Loop through each object in the fires, looking for an object called 
+    -- "fire" layer and set up the fire
     for _, object in ipairs(layer.objects) do
         if object.name == "fire" then
             local fire = {
@@ -90,10 +99,13 @@ function CavernPuzzle4:loadFires()
                 y = object.y,
                 width = object.width,
                 height = object.height,
-                isFire = true
+                isFire = true -- Flag to identify this is a fire
             }
 
+            -- Add the fire to the collision world for interaction with the player
             self.world:add(fire, fire.x, fire.y, fire.width, fire.height)
+
+            -- Store the fire in the table
             table.insert(self.fires, fire)
         end
     end
@@ -105,7 +117,8 @@ function CavernPuzzle4:switchMap(portal)
     local spawnX, spawnY = portal.spawn_x, portal.spawn_y
     local map = portal.target_map
 
+    -- Change the current level based of the target map
     if map == "puzzle3" then
-        currentLevel = CavernPuzzle3(spawnX, spawnY)
+        currentLevel = CavernPuzzle2and3(spawnX, spawnY, map)
     end
 end
