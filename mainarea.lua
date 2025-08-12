@@ -8,7 +8,7 @@ function MainArea:new(x, y)
 
     -- Define a callback function triggered when the player touches a portal 
     -- this will switch the map
-    self.player.onPortal = function(_, portal)
+    self.player.onPortal = function (_, portal)
         self:switchMap(portal)
     end
 end

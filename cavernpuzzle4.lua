@@ -16,7 +16,7 @@ function CavernPuzzle4:new(x, y)
 
     -- Define a callback function triggered when the player touches a portal 
     -- this will switch the map
-    self.player.onPortal = function(_, portal)
+    self.player.onPortal = function (_, portal)
         self:switchMap(portal)
     end
 end
@@ -74,7 +74,7 @@ function CavernPuzzle4:loadIceBlocks()
             -- Add the ice block to the collision world for interaction with the player
             self.world:add(iceBlock, iceBlock.x, iceBlock.y, iceBlock.width, iceBlock.height)
 
-            -- Sotre the ice blocks in the table
+            -- Store the ice blocks in the table
             table.insert(self.iceBlocks, iceBlock)
         end
     end

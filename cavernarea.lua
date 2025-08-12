@@ -15,27 +15,13 @@ function CavernArea:new(x, y)
 
     -- Quads representing the left and right lever states
     self.leverDirection = {
-        left = love.graphics.newQuad(
-            2 * objectsTileWidth,
-            9 * objectsTileHeight,
-            objectsTileWidth,
-            objectsTileHeight,
-            self.objectsImage:getWidth(),
-            self.objectsImage:getHeight()
-        ),
-        right = love.graphics.newQuad(
-            3 * objectsTileWidth,
-            9 * objectsTileHeight,
-            objectsTileWidth,
-            objectsTileHeight,
-            self.objectsImage:getWidth(),
-            self.objectsImage:getHeight()
-        )
+        left = self:createQuad(2, 9, objectsTileWidth, objectsTileHeight, self.objectsImage),
+        right = self:createQuad(3, 9, objectsTileWidth, objectsTileHeight, self.objectsImage)
     }
 
     -- Define a callback function triggered when the player touches a portal 
     -- this will switch the map
-    self.player.onPortal = function(_, portal)
+    self.player.onPortal = function (_, portal)
         self:switchMap(portal)
     end
 end
@@ -75,10 +61,7 @@ function CavernArea:drawBefore()
     CavernArea.super.drawBefore(self)
 
     -- Draw each lever with the correct graphic based on its state
-    for _, lever in ipairs(self.levers) do
-        local loadLeverDirection = self.leverDirection[lever.state]
-        love.graphics.draw(self.objectsImage, loadLeverDirection, lever.x + 2, lever.y)
-    end
+    self:drawTileSet(self.objectsImage, self.leverDirection, self.levers, 2)
 end
 
 function CavernArea:keypressed(key)
@@ -87,9 +70,8 @@ function CavernArea:keypressed(key)
         return -- If it is any other key, don't load anything
     end
 
-    -- Get the players collision bounds and check for overlaps
-    local playerX, playerY, playerWidth, playerHeight = self.world:getRect(self.player)
-    local overlaps = self.world:queryRect(playerX, playerY, playerWidth, playerHeight)
+    -- Get all objects currently overlapping the player
+    local overlaps = self:getPlayerOverlaps()
 
     -- If the player overlaps with an object that is a lever
     -- Change the lever state to the opposite direction

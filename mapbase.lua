@@ -62,6 +62,32 @@ function MapBase:drawDebug()
     end
 end
 
+function MapBase:drawTileSet(image, quadSet, tiles, offsetX, offsetY)
+    -- Draw each image with the correct graphic based on its state
+    for _, tile in ipairs(tiles) do
+        local quad = quadSet[tile.state]
+        love.graphics.draw(image, quad, tile.x + (offsetX or 0), tile.y + (offsetY or 0))
+    end
+end
+
+function MapBase:getPlayerOverlaps()
+    -- Return all collision objects the player is currently overlapping
+    local playerX, playerY, playerWidth, playerHeight = self.world:getRect(self.player)
+    return self.world:queryRect(playerX, playerY, playerWidth, playerHeight)
+end
+
+function MapBase:createQuad(tileX, tileY, tileWidth, tileHeight, image)
+    -- Creates and returns a Quad from a tile's position and size within the given image
+    return love.graphics.newQuad(
+            tileX * tileWidth,
+            tileY * tileHeight,
+            tileWidth,
+            tileHeight,
+            image:getWidth(),
+            image:getHeight()
+            )
+end
+
 function MapBase:loadPortals()
     -- First look for a layer name "Portals" of type "objectgroup" in the map
     local layer = self.map.layers["Portals"]

@@ -21,7 +21,7 @@ function CavernPuzzle2and3:new(x, y, map)
 
     -- Define a callback function triggered when the player touches a portal 
     -- this will switch the map
-    self.player.onPortal = function(_, portal)
+    self.player.onPortal = function (_, portal)
         self:switchMap(portal)
     end
 end

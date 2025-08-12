@@ -147,18 +147,17 @@ function CavernPuzzle1:minesweeperFunctionality()
     self.tiles = {}
 
     -- Determine each frames dimensions
-    self.imageFrameWidth = imageWidth / 7
-    self.imageFrameHeight = imageHeight / 2
+    local imageFrameWidth, imageFrameHeight = 16, 6
 
     -- Create each tile as a quad into the table as a Key Value pair with name-based keys
     for row = 1, #tileNames do
         for col = 1, #tileNames[row] do
             local key = tileNames[row][col]
             self.tiles[key] = love.graphics.newQuad(
-                (col - 1) * self.imageFrameWidth,
-                (row - 1) * self.imageFrameHeight,
-                self.imageFrameWidth,
-                self.imageFrameHeight,
+                (col - 1) * imageFrameWidth,
+                (row - 1) * imageFrameHeight,
+                imageFrameWidth,
+                imageFrameHeight,
                 imageWidth,
                 imageHeight
             )
@@ -229,11 +228,11 @@ function CavernPuzzle1:loadMinesweeperArea()
     end
 
     -- Sort all tiles by row and column so that they are in consistent order to be accessed
-    table.sort(self.minesweeperTiles, function (a, b)
-        if a.row == b.row then
-            return a.col < b.col
+    table.sort(self.minesweeperTiles, function (tile1, tile2)
+        if tile1.row == tile2.row then
+            return tile1.col < tile2.col
         else
-            return a.row < b.row
+            return tile1.row < tile2.row
         end
     end)
 

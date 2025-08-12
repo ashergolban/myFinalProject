@@ -10,14 +10,6 @@ function PuzzleGameBase:update(dt)
     self:updateButtons()
 end
 
-function PuzzleGameBase:drawTileSet(image, quadSet, tiles, offsetX, offsetY)
-    -- Draw each image with the correct graphic based on its state
-    for _, tile in ipairs(tiles) do
-        local quad = quadSet[tile.state]
-        love.graphics.draw(image, quad, tile.x + (offsetX or 0), tile.y + (offsetY or 0))
-    end
-end
-
 function PuzzleGameBase:drawBefore()
     PuzzleGameBase.super.drawBefore(self)
 
@@ -26,12 +18,6 @@ function PuzzleGameBase:drawBefore()
 
     -- Draw each button with the correct graphic based on its state
     self:drawTileSet(self.objectsImage, self.buttonState, self.buttons, 1, 1)
-end
-
-function PuzzleGameBase:getPlayerOverlaps()
-    -- Return all collision objects the player is currently overlapping
-    local playerX, playerY, playerWidth, playerHeight = self.world:getRect(self.player)
-    return self.world:queryRect(playerX, playerY, playerWidth, playerHeight)
 end
 
 function PuzzleGameBase:updateTileState()
@@ -104,18 +90,6 @@ function PuzzleGameBase:updateButtons()
             button.state = "up"
         end
     end
-end
-
-function PuzzleGameBase:createQuad(tileX, tileY, tileWidth, tileHeight, image)
-    -- Creates and returns a Quad from a tile's position and size within the given image
-    return love.graphics.newQuad(
-            tileX * tileWidth,
-            tileY * tileHeight,
-            tileWidth,
-            tileHeight,
-            image:getWidth(),
-            image:getHeight()
-            )
 end
 
 function PuzzleGameBase:loadPuzzleTiles()
