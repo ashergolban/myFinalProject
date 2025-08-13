@@ -157,8 +157,8 @@ end
 
 function Player:checkIfOnIce()
     -- Return all collision objects the player is currently overlapping
-    local PlayerX, PlayerY, PlayerW, PlayerH = self.world:getRect(self)
-    local overlaps = self.world:queryRect(PlayerX, PlayerY, PlayerW, PlayerH)
+    local playerX, playerY, playerWidth, playerHeight = self.world:getRect(self)
+    local overlaps = self.world:queryRect(playerX, playerY, playerWidth, playerHeight)
 
     -- Detect if any of the overlaps are ice blocks
     local foundIce = false

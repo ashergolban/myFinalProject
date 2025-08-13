@@ -135,5 +135,7 @@ function CavernPuzzle4:switchMap(portal)
     -- Change the current level based of the target map
     if map == "puzzle3" then
         currentLevel = CavernPuzzle2and3(spawnX, spawnY, map)
+    elseif map == "final" then
+        currentLevel = FinalArea(spawnX, spawnY)
     end
 end

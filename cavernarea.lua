@@ -26,6 +26,35 @@ function CavernArea:new(x, y)
     end
 end
 
+function CavernArea:drawBefore()
+    CavernArea.super.drawBefore(self)
+
+    -- Draw each lever with the correct graphic based on its state
+    self:drawTileSet(self.objectsImage, self.leverDirection, self.levers, 2)
+end
+
+function CavernArea:keypressed(key)
+    -- Only respond to spacebar presses
+    if key ~= "space" then
+        return -- If it is any other key, don't load anything
+    end
+
+    -- Get all objects currently overlapping the player
+    local overlaps = self:getPlayerOverlaps()
+
+    -- If the player overlaps with an object that is a lever
+    -- Change the lever state to the opposite direction
+    for _, lever in ipairs(overlaps) do
+        if lever.isLever and lever.state then
+            if lever.state == "left" then
+                lever.state = "right"
+            else
+                lever.state = "left"
+            end
+        end
+    end
+end
+
 function CavernArea:loadLevers()
     -- First look for a layer name "Levers" of type "objectgroup" in the map
     local layer = self.map.layers["Levers"]
@@ -53,35 +82,6 @@ function CavernArea:loadLevers()
 
             -- Store the lever in the table
             table.insert(self.levers, lever)
-        end
-    end
-end
-
-function CavernArea:drawBefore()
-    CavernArea.super.drawBefore(self)
-
-    -- Draw each lever with the correct graphic based on its state
-    self:drawTileSet(self.objectsImage, self.leverDirection, self.levers, 2)
-end
-
-function CavernArea:keypressed(key)
-    -- Only respond to spacebar presses
-    if key ~= "space" then
-        return -- If it is any other key, don't load anything
-    end
-
-    -- Get all objects currently overlapping the player
-    local overlaps = self:getPlayerOverlaps()
-
-    -- If the player overlaps with an object that is a lever
-    -- Change the lever state to the opposite direction
-    for _, lever in ipairs(overlaps) do
-        if lever.isLever and lever.state then
-            if lever.state == "left" then
-                lever.state = "right"
-            else
-                lever.state = "left"
-            end
         end
     end
 end

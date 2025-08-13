@@ -1,7 +1,7 @@
-MainArea = MapBase:extend()
+FinalArea = MapBase:extend()
 
-function MainArea:new(x, y)
-    MainArea.super.new(self, "maps/MainMap.lua")
+function FinalArea:new(x, y)
+    FinalArea.super.new(self, "maps/FinalMap.lua")
 
     -- Create the player at the given coordinates and register them in the collision world
     self.player = Player (x, y, self.world)
@@ -13,8 +13,8 @@ function MainArea:new(x, y)
     end
 end
 
-function MainArea:switchMap(portal)
+function FinalArea:switchMap(portal)
     -- Switches the current level with a new instance
     -- The player will spawn at the coordinates defined in the portal's properties
-    currentLevel = CavernArea(portal.spawn_x, portal.spawn_y)
+    currentLevel = CavernPuzzle4(portal.spawn_x, portal.spawn_y)
 end
